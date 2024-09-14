@@ -1,0 +1,28 @@
+{
+  "geneticsCollabApp": {
+    "namedEntity": {
+      "home": {
+        "title": "Named Entities",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Criar novo(a) Named Entity",
+        "createOrEditLabel": "Criar ou editar Named Entity",
+        "notFound": "Nenhum Named Entities encontrado"
+      },
+      "created": "Um novo Named Entity foi criado com o identificador {{ param }}",
+      "updated": "Named Entity com identificador {{ param }} foi actualizado",
+      "deleted": "Named Entity com identificador {{ param }} foi eliminado",
+      "delete": {
+        "question": "Tem a certeza que pretende eliminar o(a) Named Entity {{ id }}?"
+      },
+      "detail": {
+        "title": "Named Entity"
+      },
+      "id": "ID",
+      "text": "Text",
+      "startChar": "Start Char",
+      "endChar": "End Char",
+      "tags": "Tags",
+      "article": "Article"
+    }
+  }
+}

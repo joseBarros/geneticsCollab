@@ -1,0 +1,34 @@
+{
+  "applications": ["geneticsCollab"],
+  "changelogDate": "20240904183346",
+  "dto": "mapstruct",
+  "entityTableName": "named_entity",
+  "fields": [
+    {
+      "fieldName": "text",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startChar",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "endChar",
+      "fieldType": "String"
+    }
+  ],
+  "name": "NamedEntity",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "label",
+      "otherEntityName": "tag",
+      "relationshipName": "tags",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

@@ -1,0 +1,28 @@
+{
+  "geneticColabApp": {
+    "namedEntity": {
+      "home": {
+        "title": "NamedEntities",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Named Entity",
+        "createOrEditLabel": "Créer ou éditer un Named Entity",
+        "notFound": "Aucun Named Entity trouvé"
+      },
+      "created": "Un nouveau Named Entity a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Named Entity avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Named Entity avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Named Entity {{ id }} ?"
+      },
+      "detail": {
+        "title": "Named Entity"
+      },
+      "id": "ID",
+      "text": "Text",
+      "startChar": "Start Char",
+      "endChar": "End Char",
+      "tags": "Tags",
+      "article": "Article"
+    }
+  }
+}

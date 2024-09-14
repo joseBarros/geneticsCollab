@@ -1,0 +1,66 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName geneticsCollab
+    buildTool maven
+    cacheProvider ehcache
+    clientFramework react
+    clientTheme none
+    creationTimestamp 1725473949851
+    databaseType mongodb
+    devDatabaseType mongodb
+    enableHibernateCache false
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhipsterVersion "8.0.0"
+    jwtSecretKey "YTY3ZWQ4YmQzZDgyYmY2MGU5YTE1YzdjZmE1OWFiZWJlOGVlNDUwMDllYzljYTUyNDE5MWRkZmY3YzRiMDI5MTFkYTE3N2NkMDJjMjcwNTM0ZDJiZTJmNDRiMjJkOTgwNDU2N2NmZTFhNGFhNGE2NmJkM2ZmOTAzZjJmZDMzMDk="
+    languages [en, pt-pt]
+    messageBroker false
+    microfrontends []
+    nativeLanguage en
+    packageName com.isec.jbarros
+    prodDatabaseType mongodb
+    reactive false
+    searchEngine false
+    serviceDiscoveryType false
+    testFrameworks []
+    websocket false
+    withAdminUi true
+  }
+
+    entities Article, NamedEntity, Tag, NLPModel
+}
+
+entity Article {
+    title String required
+    summary String
+    file AnyBlob
+}
+entity NamedEntity {
+    text String required
+    startChar String
+    endChar String
+}
+
+entity Tag {
+    label String required
+}
+
+entity NLPModel {
+    name String required
+    framework String
+    url String
+    Notes String
+}
+
+relationship ManyToMany {
+    Article{entities(text)} to NamedEntity
+    NamedEntity{tags(label)} to Tag
+    NLPModel{tags(label)} to Tag
+}
+
+dto Article, NamedEntity, Tag, NLPModel with mapstruct
+paginate Article, NamedEntity, Tag, NLPModel with pagination
+service Article, NamedEntity, Tag, NLPModel with serviceImpl
+

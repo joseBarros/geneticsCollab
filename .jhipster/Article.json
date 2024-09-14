@@ -1,0 +1,35 @@
+{
+  "applications": ["geneticsCollab"],
+  "changelogDate": "20240904183345",
+  "dto": "mapstruct",
+  "entityTableName": "article",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "summary",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "file",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    }
+  ],
+  "name": "Article",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "text",
+      "otherEntityName": "namedEntity",
+      "relationshipName": "entities",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

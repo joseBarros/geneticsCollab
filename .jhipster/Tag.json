@@ -1,0 +1,18 @@
+{
+  "applications": ["geneticsCollab"],
+  "changelogDate": "20240904183347",
+  "dto": "mapstruct",
+  "entityTableName": "tag",
+  "fields": [
+    {
+      "fieldName": "label",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Tag",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
