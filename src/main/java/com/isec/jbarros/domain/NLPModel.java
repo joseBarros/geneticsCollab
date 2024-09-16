@@ -29,11 +29,16 @@ public class NLPModel implements Serializable {
     @Field("framework")
     private String framework;
 
-    @Field("url")
-    private String url;
+    @Field("path")
+    private String path;
 
     @Field("notes")
     private String notes;
+
+    @DBRef
+    @Field("article")
+    @JsonIgnoreProperties(value = { "entities", "model" }, allowSetters = true)
+    private Set<Article> articles = new HashSet<>();
 
     @DBRef
     @Field("tags")
@@ -81,17 +86,17 @@ public class NLPModel implements Serializable {
         this.framework = framework;
     }
 
-    public String getUrl() {
-        return this.url;
+    public String getPath() {
+        return this.path;
     }
 
-    public NLPModel url(String url) {
-        this.setUrl(url);
+    public NLPModel path(String path) {
+        this.setPath(path);
         return this;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getNotes() {
@@ -105,6 +110,37 @@ public class NLPModel implements Serializable {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Set<Article> getArticles() {
+        return this.articles;
+    }
+
+    public void setArticles(Set<Article> articles) {
+        if (this.articles != null) {
+            this.articles.forEach(i -> i.setModel(null));
+        }
+        if (articles != null) {
+            articles.forEach(i -> i.setModel(this));
+        }
+        this.articles = articles;
+    }
+
+    public NLPModel articles(Set<Article> articles) {
+        this.setArticles(articles);
+        return this;
+    }
+
+    public NLPModel addArticle(Article article) {
+        this.articles.add(article);
+        article.setModel(this);
+        return this;
+    }
+
+    public NLPModel removeArticle(Article article) {
+        this.articles.remove(article);
+        article.setModel(null);
+        return this;
     }
 
     public Set<Tag> getTags() {
@@ -156,7 +192,7 @@ public class NLPModel implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", framework='" + getFramework() + "'" +
-            ", url='" + getUrl() + "'" +
+            ", path='" + getPath() + "'" +
             ", notes='" + getNotes() + "'" +
             "}";
     }

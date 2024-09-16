@@ -112,7 +112,13 @@ export const NLPModelUpdate = () => {
                 data-cy="framework"
                 type="text"
               />
-              <ValidatedField label={translate('geneticsCollabApp.nLPModel.url')} id="nlp-model-url" name="url" data-cy="url" type="text" />
+              <ValidatedField
+                label={translate('geneticsCollabApp.nLPModel.path')}
+                id="nlp-model-path"
+                name="path"
+                data-cy="path"
+                type="text"
+              />
               <ValidatedField
                 label={translate('geneticsCollabApp.nLPModel.notes')}
                 id="nlp-model-notes"

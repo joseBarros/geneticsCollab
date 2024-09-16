@@ -122,9 +122,9 @@ export const NLPModel = () => {
                   <Translate contentKey="geneticsCollabApp.nLPModel.framework">Framework</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('framework')} />
                 </th>
-                <th className="hand" onClick={sort('url')}>
-                  <Translate contentKey="geneticsCollabApp.nLPModel.url">Url</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('url')} />
+                <th className="hand" onClick={sort('path')}>
+                  <Translate contentKey="geneticsCollabApp.nLPModel.path">Path</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('path')} />
                 </th>
                 <th className="hand" onClick={sort('notes')}>
                   <Translate contentKey="geneticsCollabApp.nLPModel.notes">Notes</Translate>{' '}
@@ -143,7 +143,7 @@ export const NLPModel = () => {
                   </td>
                   <td>{nLPModel.name}</td>
                   <td>{nLPModel.framework}</td>
-                  <td>{nLPModel.url}</td>
+                  <td>{nLPModel.path}</td>
                   <td>{nLPModel.notes}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

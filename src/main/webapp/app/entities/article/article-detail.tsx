@@ -44,6 +44,12 @@ export const ArticleDetail = () => {
           </dt>
           <dd>{articleEntity.summary}</dd>
           <dt>
+            <span id="text">
+              <Translate contentKey="geneticsCollabApp.article.text">Text</Translate>
+            </span>
+          </dt>
+          <dd>{articleEntity.text}</dd>
+          <dt>
             <span id="file">
               <Translate contentKey="geneticsCollabApp.article.file">File</Translate>
             </span>
@@ -75,6 +81,10 @@ export const ArticleDetail = () => {
                 ))
               : null}
           </dd>
+          <dt>
+            <Translate contentKey="geneticsCollabApp.article.model">Model</Translate>
+          </dt>
+          <dd>{articleEntity.model ? articleEntity.model.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/article" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

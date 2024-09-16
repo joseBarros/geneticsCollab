@@ -29,6 +29,9 @@ public class Article implements Serializable {
     @Field("summary")
     private String summary;
 
+    @Field("text")
+    private String text;
+
     @Field("file")
     private byte[] file;
 
@@ -39,6 +42,11 @@ public class Article implements Serializable {
     @Field("entities")
     @JsonIgnoreProperties(value = { "tags", "articles" }, allowSetters = true)
     private Set<NamedEntity> entities = new HashSet<>();
+
+    @DBRef
+    @Field("model")
+    @JsonIgnoreProperties(value = { "articles", "tags" }, allowSetters = true)
+    private NLPModel model;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -79,6 +87,19 @@ public class Article implements Serializable {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getText() {
+        return this.text;
+    }
+
+    public Article text(String text) {
+        this.setText(text);
+        return this;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public byte[] getFile() {
@@ -130,6 +151,19 @@ public class Article implements Serializable {
         return this;
     }
 
+    public NLPModel getModel() {
+        return this.model;
+    }
+
+    public void setModel(NLPModel nLPModel) {
+        this.model = nLPModel;
+    }
+
+    public Article model(NLPModel nLPModel) {
+        this.setModel(nLPModel);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -156,6 +190,7 @@ public class Article implements Serializable {
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", summary='" + getSummary() + "'" +
+            ", text='" + getText() + "'" +
             ", file='" + getFile() + "'" +
             ", fileContentType='" + getFileContentType() + "'" +
             "}";

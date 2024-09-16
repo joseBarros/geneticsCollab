@@ -44,6 +44,9 @@ class ArticleResourceIT {
     private static final String DEFAULT_SUMMARY = "AAAAAAAAAA";
     private static final String UPDATED_SUMMARY = "BBBBBBBBBB";
 
+    private static final String DEFAULT_TEXT = "AAAAAAAAAA";
+    private static final String UPDATED_TEXT = "BBBBBBBBBB";
+
     private static final byte[] DEFAULT_FILE = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_FILE = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_FILE_CONTENT_TYPE = "image/jpg";
@@ -79,6 +82,7 @@ class ArticleResourceIT {
         Article article = new Article()
             .title(DEFAULT_TITLE)
             .summary(DEFAULT_SUMMARY)
+            .text(DEFAULT_TEXT)
             .file(DEFAULT_FILE)
             .fileContentType(DEFAULT_FILE_CONTENT_TYPE);
         return article;
@@ -94,6 +98,7 @@ class ArticleResourceIT {
         Article article = new Article()
             .title(UPDATED_TITLE)
             .summary(UPDATED_SUMMARY)
+            .text(UPDATED_TEXT)
             .file(UPDATED_FILE)
             .fileContentType(UPDATED_FILE_CONTENT_TYPE);
         return article;
@@ -120,6 +125,7 @@ class ArticleResourceIT {
         Article testArticle = articleList.get(articleList.size() - 1);
         assertThat(testArticle.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testArticle.getSummary()).isEqualTo(DEFAULT_SUMMARY);
+        assertThat(testArticle.getText()).isEqualTo(DEFAULT_TEXT);
         assertThat(testArticle.getFile()).isEqualTo(DEFAULT_FILE);
         assertThat(testArticle.getFileContentType()).isEqualTo(DEFAULT_FILE_CONTENT_TYPE);
     }
@@ -172,6 +178,7 @@ class ArticleResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(article.getId())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].summary").value(hasItem(DEFAULT_SUMMARY)))
+            .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT)))
             .andExpect(jsonPath("$.[*].fileContentType").value(hasItem(DEFAULT_FILE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].file").value(hasItem(Base64Utils.encodeToString(DEFAULT_FILE))));
     }
@@ -206,6 +213,7 @@ class ArticleResourceIT {
             .andExpect(jsonPath("$.id").value(article.getId()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.summary").value(DEFAULT_SUMMARY))
+            .andExpect(jsonPath("$.text").value(DEFAULT_TEXT))
             .andExpect(jsonPath("$.fileContentType").value(DEFAULT_FILE_CONTENT_TYPE))
             .andExpect(jsonPath("$.file").value(Base64Utils.encodeToString(DEFAULT_FILE)));
     }
@@ -225,7 +233,12 @@ class ArticleResourceIT {
 
         // Update the article
         Article updatedArticle = articleRepository.findById(article.getId()).orElseThrow();
-        updatedArticle.title(UPDATED_TITLE).summary(UPDATED_SUMMARY).file(UPDATED_FILE).fileContentType(UPDATED_FILE_CONTENT_TYPE);
+        updatedArticle
+            .title(UPDATED_TITLE)
+            .summary(UPDATED_SUMMARY)
+            .text(UPDATED_TEXT)
+            .file(UPDATED_FILE)
+            .fileContentType(UPDATED_FILE_CONTENT_TYPE);
         ArticleDTO articleDTO = articleMapper.toDto(updatedArticle);
 
         restArticleMockMvc
@@ -242,6 +255,7 @@ class ArticleResourceIT {
         Article testArticle = articleList.get(articleList.size() - 1);
         assertThat(testArticle.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testArticle.getSummary()).isEqualTo(UPDATED_SUMMARY);
+        assertThat(testArticle.getText()).isEqualTo(UPDATED_TEXT);
         assertThat(testArticle.getFile()).isEqualTo(UPDATED_FILE);
         assertThat(testArticle.getFileContentType()).isEqualTo(UPDATED_FILE_CONTENT_TYPE);
     }
@@ -319,7 +333,7 @@ class ArticleResourceIT {
         Article partialUpdatedArticle = new Article();
         partialUpdatedArticle.setId(article.getId());
 
-        partialUpdatedArticle.title(UPDATED_TITLE).file(UPDATED_FILE).fileContentType(UPDATED_FILE_CONTENT_TYPE);
+        partialUpdatedArticle.title(UPDATED_TITLE).text(UPDATED_TEXT);
 
         restArticleMockMvc
             .perform(
@@ -335,8 +349,9 @@ class ArticleResourceIT {
         Article testArticle = articleList.get(articleList.size() - 1);
         assertThat(testArticle.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testArticle.getSummary()).isEqualTo(DEFAULT_SUMMARY);
-        assertThat(testArticle.getFile()).isEqualTo(UPDATED_FILE);
-        assertThat(testArticle.getFileContentType()).isEqualTo(UPDATED_FILE_CONTENT_TYPE);
+        assertThat(testArticle.getText()).isEqualTo(UPDATED_TEXT);
+        assertThat(testArticle.getFile()).isEqualTo(DEFAULT_FILE);
+        assertThat(testArticle.getFileContentType()).isEqualTo(DEFAULT_FILE_CONTENT_TYPE);
     }
 
     @Test
@@ -350,7 +365,12 @@ class ArticleResourceIT {
         Article partialUpdatedArticle = new Article();
         partialUpdatedArticle.setId(article.getId());
 
-        partialUpdatedArticle.title(UPDATED_TITLE).summary(UPDATED_SUMMARY).file(UPDATED_FILE).fileContentType(UPDATED_FILE_CONTENT_TYPE);
+        partialUpdatedArticle
+            .title(UPDATED_TITLE)
+            .summary(UPDATED_SUMMARY)
+            .text(UPDATED_TEXT)
+            .file(UPDATED_FILE)
+            .fileContentType(UPDATED_FILE_CONTENT_TYPE);
 
         restArticleMockMvc
             .perform(
@@ -366,6 +386,7 @@ class ArticleResourceIT {
         Article testArticle = articleList.get(articleList.size() - 1);
         assertThat(testArticle.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testArticle.getSummary()).isEqualTo(UPDATED_SUMMARY);
+        assertThat(testArticle.getText()).isEqualTo(UPDATED_TEXT);
         assertThat(testArticle.getFile()).isEqualTo(UPDATED_FILE);
         assertThat(testArticle.getFileContentType()).isEqualTo(UPDATED_FILE_CONTENT_TYPE);
     }

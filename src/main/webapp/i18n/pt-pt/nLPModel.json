@@ -20,8 +20,9 @@
       "id": "ID",
       "name": "Name",
       "framework": "Framework",
-      "url": "Url",
+      "path": "Path",
       "notes": "Notes",
+      "article": "Article",
       "tags": "Tags"
     }
   }

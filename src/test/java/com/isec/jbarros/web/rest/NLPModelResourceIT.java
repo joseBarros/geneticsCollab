@@ -43,8 +43,8 @@ class NLPModelResourceIT {
     private static final String DEFAULT_FRAMEWORK = "AAAAAAAAAA";
     private static final String UPDATED_FRAMEWORK = "BBBBBBBBBB";
 
-    private static final String DEFAULT_URL = "AAAAAAAAAA";
-    private static final String UPDATED_URL = "BBBBBBBBBB";
+    private static final String DEFAULT_PATH = "AAAAAAAAAA";
+    private static final String UPDATED_PATH = "BBBBBBBBBB";
 
     private static final String DEFAULT_NOTES = "AAAAAAAAAA";
     private static final String UPDATED_NOTES = "BBBBBBBBBB";
@@ -76,7 +76,7 @@ class NLPModelResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static NLPModel createEntity() {
-        NLPModel nLPModel = new NLPModel().name(DEFAULT_NAME).framework(DEFAULT_FRAMEWORK).url(DEFAULT_URL).notes(DEFAULT_NOTES);
+        NLPModel nLPModel = new NLPModel().name(DEFAULT_NAME).framework(DEFAULT_FRAMEWORK).path(DEFAULT_PATH).notes(DEFAULT_NOTES);
         return nLPModel;
     }
 
@@ -87,7 +87,7 @@ class NLPModelResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static NLPModel createUpdatedEntity() {
-        NLPModel nLPModel = new NLPModel().name(UPDATED_NAME).framework(UPDATED_FRAMEWORK).url(UPDATED_URL).notes(UPDATED_NOTES);
+        NLPModel nLPModel = new NLPModel().name(UPDATED_NAME).framework(UPDATED_FRAMEWORK).path(UPDATED_PATH).notes(UPDATED_NOTES);
         return nLPModel;
     }
 
@@ -112,7 +112,7 @@ class NLPModelResourceIT {
         NLPModel testNLPModel = nLPModelList.get(nLPModelList.size() - 1);
         assertThat(testNLPModel.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testNLPModel.getFramework()).isEqualTo(DEFAULT_FRAMEWORK);
-        assertThat(testNLPModel.getUrl()).isEqualTo(DEFAULT_URL);
+        assertThat(testNLPModel.getPath()).isEqualTo(DEFAULT_PATH);
         assertThat(testNLPModel.getNotes()).isEqualTo(DEFAULT_NOTES);
     }
 
@@ -164,7 +164,7 @@ class NLPModelResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(nLPModel.getId())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].framework").value(hasItem(DEFAULT_FRAMEWORK)))
-            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL)))
+            .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
     }
 
@@ -198,7 +198,7 @@ class NLPModelResourceIT {
             .andExpect(jsonPath("$.id").value(nLPModel.getId()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.framework").value(DEFAULT_FRAMEWORK))
-            .andExpect(jsonPath("$.url").value(DEFAULT_URL))
+            .andExpect(jsonPath("$.path").value(DEFAULT_PATH))
             .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES));
     }
 
@@ -217,7 +217,7 @@ class NLPModelResourceIT {
 
         // Update the nLPModel
         NLPModel updatedNLPModel = nLPModelRepository.findById(nLPModel.getId()).orElseThrow();
-        updatedNLPModel.name(UPDATED_NAME).framework(UPDATED_FRAMEWORK).url(UPDATED_URL).notes(UPDATED_NOTES);
+        updatedNLPModel.name(UPDATED_NAME).framework(UPDATED_FRAMEWORK).path(UPDATED_PATH).notes(UPDATED_NOTES);
         NLPModelDTO nLPModelDTO = nLPModelMapper.toDto(updatedNLPModel);
 
         restNLPModelMockMvc
@@ -234,7 +234,7 @@ class NLPModelResourceIT {
         NLPModel testNLPModel = nLPModelList.get(nLPModelList.size() - 1);
         assertThat(testNLPModel.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testNLPModel.getFramework()).isEqualTo(UPDATED_FRAMEWORK);
-        assertThat(testNLPModel.getUrl()).isEqualTo(UPDATED_URL);
+        assertThat(testNLPModel.getPath()).isEqualTo(UPDATED_PATH);
         assertThat(testNLPModel.getNotes()).isEqualTo(UPDATED_NOTES);
     }
 
@@ -327,7 +327,7 @@ class NLPModelResourceIT {
         NLPModel testNLPModel = nLPModelList.get(nLPModelList.size() - 1);
         assertThat(testNLPModel.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testNLPModel.getFramework()).isEqualTo(UPDATED_FRAMEWORK);
-        assertThat(testNLPModel.getUrl()).isEqualTo(DEFAULT_URL);
+        assertThat(testNLPModel.getPath()).isEqualTo(DEFAULT_PATH);
         assertThat(testNLPModel.getNotes()).isEqualTo(DEFAULT_NOTES);
     }
 
@@ -342,7 +342,7 @@ class NLPModelResourceIT {
         NLPModel partialUpdatedNLPModel = new NLPModel();
         partialUpdatedNLPModel.setId(nLPModel.getId());
 
-        partialUpdatedNLPModel.name(UPDATED_NAME).framework(UPDATED_FRAMEWORK).url(UPDATED_URL).notes(UPDATED_NOTES);
+        partialUpdatedNLPModel.name(UPDATED_NAME).framework(UPDATED_FRAMEWORK).path(UPDATED_PATH).notes(UPDATED_NOTES);
 
         restNLPModelMockMvc
             .perform(
@@ -358,7 +358,7 @@ class NLPModelResourceIT {
         NLPModel testNLPModel = nLPModelList.get(nLPModelList.size() - 1);
         assertThat(testNLPModel.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testNLPModel.getFramework()).isEqualTo(UPDATED_FRAMEWORK);
-        assertThat(testNLPModel.getUrl()).isEqualTo(UPDATED_URL);
+        assertThat(testNLPModel.getPath()).isEqualTo(UPDATED_PATH);
         assertThat(testNLPModel.getNotes()).isEqualTo(UPDATED_NOTES);
     }
 

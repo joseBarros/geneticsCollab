@@ -19,7 +19,7 @@ public class NLPModelDTO implements Serializable {
 
     private String framework;
 
-    private String url;
+    private String path;
 
     private String notes;
 
@@ -49,12 +49,12 @@ public class NLPModelDTO implements Serializable {
         this.framework = framework;
     }
 
-    public String getUrl() {
-        return url;
+    public String getPath() {
+        return path;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getNotes() {
@@ -101,7 +101,7 @@ public class NLPModelDTO implements Serializable {
             "id='" + getId() + "'" +
             ", name='" + getName() + "'" +
             ", framework='" + getFramework() + "'" +
-            ", url='" + getUrl() + "'" +
+            ", path='" + getPath() + "'" +
             ", notes='" + getNotes() + "'" +
             ", tags=" + getTags() +
             "}";

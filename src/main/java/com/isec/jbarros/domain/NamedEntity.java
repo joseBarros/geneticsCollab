@@ -39,7 +39,7 @@ public class NamedEntity implements Serializable {
 
     @DBRef
     @Field("articles")
-    @JsonIgnoreProperties(value = { "entities" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "entities", "model" }, allowSetters = true)
     private Set<Article> articles = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

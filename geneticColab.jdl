@@ -35,6 +35,7 @@ application {
 entity Article {
     title String required
     summary String
+    text String
     file AnyBlob
 }
 entity NamedEntity {
@@ -50,14 +51,18 @@ entity Tag {
 entity NLPModel {
     name String required
     framework String
-    url String
-    Notes String
+    path String
+    notes String
 }
 
 relationship ManyToMany {
     Article{entities(text)} to NamedEntity
     NamedEntity{tags(label)} to Tag
     NLPModel{tags(label)} to Tag
+}
+
+relationship OneToMany {
+    NLPModel{article} to Article{model}
 }
 
 dto Article, NamedEntity, Tag, NLPModel with mapstruct

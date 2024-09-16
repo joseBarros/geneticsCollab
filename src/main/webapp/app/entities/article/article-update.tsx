@@ -10,6 +10,8 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { INamedEntity } from 'app/shared/model/named-entity.model';
 import { getEntities as getNamedEntities } from 'app/entities/named-entity/named-entity.reducer';
+import { INLPModel } from 'app/shared/model/nlp-model.model';
+import { getEntities as getNLpModels } from 'app/entities/nlp-model/nlp-model.reducer';
 import { IArticle } from 'app/shared/model/article.model';
 import { getEntity, updateEntity, createEntity, reset } from './article.reducer';
 
@@ -22,6 +24,7 @@ export const ArticleUpdate = () => {
   const isNew = id === undefined;
 
   const namedEntities = useAppSelector(state => state.namedEntity.entities);
+  const nLPModels = useAppSelector(state => state.nLPModel.entities);
   const articleEntity = useAppSelector(state => state.article.entity);
   const loading = useAppSelector(state => state.article.loading);
   const updating = useAppSelector(state => state.article.updating);
@@ -39,6 +42,7 @@ export const ArticleUpdate = () => {
     }
 
     dispatch(getNamedEntities({}));
+    dispatch(getNLpModels({}));
   }, []);
 
   useEffect(() => {
@@ -53,6 +57,7 @@ export const ArticleUpdate = () => {
       ...articleEntity,
       ...values,
       entities: mapIdList(values.entities),
+      model: nLPModels.find(it => it.id.toString() === values.model.toString()),
     };
 
     if (isNew) {
@@ -68,6 +73,7 @@ export const ArticleUpdate = () => {
       : {
           ...articleEntity,
           entities: articleEntity?.entities?.map(e => e.id.toString()),
+          model: articleEntity?.model?.id,
         };
 
   return (
@@ -112,6 +118,13 @@ export const ArticleUpdate = () => {
                 data-cy="summary"
                 type="text"
               />
+              <ValidatedField
+                label={translate('geneticsCollabApp.article.text')}
+                id="article-text"
+                name="text"
+                data-cy="text"
+                type="text"
+              />
               <ValidatedBlobField
                 label={translate('geneticsCollabApp.article.file')}
                 id="article-file"
@@ -132,6 +145,22 @@ export const ArticleUpdate = () => {
                   ? namedEntities.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
                         {otherEntity.text}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField
+                id="article-model"
+                name="model"
+                data-cy="model"
+                label={translate('geneticsCollabApp.article.model')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {nLPModels
+                  ? nLPModels.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
                       </option>
                     ))
                   : null}

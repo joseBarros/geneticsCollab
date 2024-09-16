@@ -14,7 +14,7 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "url",
+      "fieldName": "path",
       "fieldType": "String"
     },
     {
@@ -25,6 +25,13 @@
   "name": "NLPModel",
   "pagination": "pagination",
   "relationships": [
+    {
+      "otherEntityName": "article",
+      "otherEntityRelationshipName": "model",
+      "relationshipName": "article",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
     {
       "otherEntityField": "label",
       "otherEntityName": "tag",

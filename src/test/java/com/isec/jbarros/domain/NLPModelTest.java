@@ -1,5 +1,6 @@
 package com.isec.jbarros.domain;
 
+import static com.isec.jbarros.domain.ArticleTestSamples.*;
 import static com.isec.jbarros.domain.NLPModelTestSamples.*;
 import static com.isec.jbarros.domain.TagTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +24,28 @@ class NLPModelTest {
 
         nLPModel2 = getNLPModelSample2();
         assertThat(nLPModel1).isNotEqualTo(nLPModel2);
+    }
+
+    @Test
+    void articleTest() throws Exception {
+        NLPModel nLPModel = getNLPModelRandomSampleGenerator();
+        Article articleBack = getArticleRandomSampleGenerator();
+
+        nLPModel.addArticle(articleBack);
+        assertThat(nLPModel.getArticles()).containsOnly(articleBack);
+        assertThat(articleBack.getModel()).isEqualTo(nLPModel);
+
+        nLPModel.removeArticle(articleBack);
+        assertThat(nLPModel.getArticles()).doesNotContain(articleBack);
+        assertThat(articleBack.getModel()).isNull();
+
+        nLPModel.articles(new HashSet<>(Set.of(articleBack)));
+        assertThat(nLPModel.getArticles()).containsOnly(articleBack);
+        assertThat(articleBack.getModel()).isEqualTo(nLPModel);
+
+        nLPModel.setArticles(new HashSet<>());
+        assertThat(nLPModel.getArticles()).doesNotContain(articleBack);
+        assertThat(articleBack.getModel()).isNull();
     }
 
     @Test

@@ -19,10 +19,14 @@ public class ArticleDTO implements Serializable {
 
     private String summary;
 
+    private String text;
+
     private byte[] file;
 
     private String fileContentType;
     private Set<NamedEntityDTO> entities = new HashSet<>();
+
+    private NLPModelDTO model;
 
     public String getId() {
         return id;
@@ -48,6 +52,14 @@ public class ArticleDTO implements Serializable {
         this.summary = summary;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public byte[] getFile() {
         return file;
     }
@@ -70,6 +82,14 @@ public class ArticleDTO implements Serializable {
 
     public void setEntities(Set<NamedEntityDTO> entities) {
         this.entities = entities;
+    }
+
+    public NLPModelDTO getModel() {
+        return model;
+    }
+
+    public void setModel(NLPModelDTO model) {
+        this.model = model;
     }
 
     @Override
@@ -100,8 +120,10 @@ public class ArticleDTO implements Serializable {
             "id='" + getId() + "'" +
             ", title='" + getTitle() + "'" +
             ", summary='" + getSummary() + "'" +
+            ", text='" + getText() + "'" +
             ", file='" + getFile() + "'" +
             ", entities=" + getEntities() +
+            ", model=" + getModel() +
             "}";
     }
 }

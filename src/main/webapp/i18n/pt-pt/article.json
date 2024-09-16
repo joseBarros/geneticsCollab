@@ -20,8 +20,10 @@
       "id": "ID",
       "title": "Title",
       "summary": "Summary",
+      "text": "Text",
       "file": "File",
-      "entities": "Entities"
+      "entities": "Entities",
+      "model": "Model"
     }
   }
 }

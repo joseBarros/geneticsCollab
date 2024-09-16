@@ -33,7 +33,7 @@ public class Tag implements Serializable {
 
     @DBRef
     @Field("nLPModels")
-    @JsonIgnoreProperties(value = { "tags" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "articles", "tags" }, allowSetters = true)
     private Set<NLPModel> nLPModels = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

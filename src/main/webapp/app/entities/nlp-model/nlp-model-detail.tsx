@@ -44,11 +44,11 @@ export const NLPModelDetail = () => {
           </dt>
           <dd>{nLPModelEntity.framework}</dd>
           <dt>
-            <span id="url">
-              <Translate contentKey="geneticsCollabApp.nLPModel.url">Url</Translate>
+            <span id="path">
+              <Translate contentKey="geneticsCollabApp.nLPModel.path">Path</Translate>
             </span>
           </dt>
-          <dd>{nLPModelEntity.url}</dd>
+          <dd>{nLPModelEntity.path}</dd>
           <dt>
             <span id="notes">
               <Translate contentKey="geneticsCollabApp.nLPModel.notes">Notes</Translate>

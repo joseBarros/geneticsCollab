@@ -1,6 +1,7 @@
 package com.isec.jbarros.domain;
 
 import static com.isec.jbarros.domain.ArticleTestSamples.*;
+import static com.isec.jbarros.domain.NLPModelTestSamples.*;
 import static com.isec.jbarros.domain.NamedEntityTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,5 +42,17 @@ class ArticleTest {
 
         article.setEntities(new HashSet<>());
         assertThat(article.getEntities()).doesNotContain(namedEntityBack);
+    }
+
+    @Test
+    void modelTest() throws Exception {
+        Article article = getArticleRandomSampleGenerator();
+        NLPModel nLPModelBack = getNLPModelRandomSampleGenerator();
+
+        article.setModel(nLPModelBack);
+        assertThat(article.getModel()).isEqualTo(nLPModelBack);
+
+        article.model(null);
+        assertThat(article.getModel()).isNull();
     }
 }

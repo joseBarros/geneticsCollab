@@ -122,9 +122,16 @@ export const Article = () => {
                   <Translate contentKey="geneticsCollabApp.article.summary">Summary</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('summary')} />
                 </th>
+                <th className="hand" onClick={sort('text')}>
+                  <Translate contentKey="geneticsCollabApp.article.text">Text</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('text')} />
+                </th>
                 <th className="hand" onClick={sort('file')}>
                   <Translate contentKey="geneticsCollabApp.article.file">File</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('file')} />
+                </th>
+                <th>
+                  <Translate contentKey="geneticsCollabApp.article.model">Model</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -139,6 +146,7 @@ export const Article = () => {
                   </td>
                   <td>{article.title}</td>
                   <td>{article.summary}</td>
+                  <td>{article.text}</td>
                   <td>
                     {article.file ? (
                       <div>
@@ -154,6 +162,7 @@ export const Article = () => {
                       </div>
                     ) : null}
                   </td>
+                  <td>{article.model ? <Link to={`/nlp-model/${article.model.id}`}>{article.model.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/article/${article.id}`} color="info" size="sm" data-cy="entityDetailsButton">
