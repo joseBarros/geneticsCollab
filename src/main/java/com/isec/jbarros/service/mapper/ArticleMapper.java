@@ -26,6 +26,8 @@ public interface ArticleMapper extends EntityMapper<ArticleDTO, Article> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "text", source = "text")
+    @Mapping(target = "startChar", source = "startChar")
+    @Mapping(target = "endChar", source = "endChar")
     NamedEntityDTO toDtoNamedEntityText(NamedEntity namedEntity);
 
     @Named("namedEntityTextSet")

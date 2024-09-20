@@ -2,17 +2,23 @@ package com.isec.jbarros.web.rest;
 
 import com.isec.jbarros.repository.ArticleRepository;
 import com.isec.jbarros.service.ArticleService;
+import com.isec.jbarros.service.NLPService;
+import com.isec.jbarros.service.PDFService;
 import com.isec.jbarros.service.dto.ArticleDTO;
 import com.isec.jbarros.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,9 +48,15 @@ public class ArticleResource {
 
     private final ArticleRepository articleRepository;
 
-    public ArticleResource(ArticleService articleService, ArticleRepository articleRepository) {
+    private final NLPService nlpService;
+
+    private final PDFService pdfService;
+
+    public ArticleResource(ArticleService articleService, ArticleRepository articleRepository, NLPService nlpService, PDFService pdfService) {
         this.articleService = articleService;
         this.articleRepository = articleRepository;
+        this.nlpService = nlpService;
+        this.pdfService = pdfService;
     }
 
     /**
@@ -60,11 +72,34 @@ public class ArticleResource {
         if (articleDTO.getId() != null) {
             throw new BadRequestAlertException("A new article cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        extractText(articleDTO);
         ArticleDTO result = articleService.save(articleDTO);
+        extractEntities(result);
         return ResponseEntity
             .created(new URI("/api/articles/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
             .body(result);
+    }
+
+    private void extractEntities(ArticleDTO result) {
+        //Call NLP service responsible for NER
+        if(result.getText()!=null && !result.getText().isEmpty() && result.getModel() != null && result.getModel().getId()!=null){
+            nlpService.processText(result.getId(), result.getText(), result.getModel().getId());
+        }
+    }
+
+    private void extractText(ArticleDTO articleDTO) {
+        //Extract text from PDF
+        try {
+            if(articleDTO.getFile() != null) {
+                String extractedText = pdfService.extractTextFromPDF(articleDTO.getFile());
+                if(extractedText != null) {
+                    articleDTO.setText(extractedText);
+                }
+            }
+        } catch (IOException e) {
+            throw new BadRequestAlertException("Error extracting article text from file", ENTITY_NAME, "filerror");
+        }
     }
 
     /**
@@ -93,8 +128,9 @@ public class ArticleResource {
         if (!articleRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-
+        extractText(articleDTO);
         ArticleDTO result = articleService.update(articleDTO);
+        extractEntities(result);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, articleDTO.getId()))
@@ -184,5 +220,16 @@ public class ArticleResource {
         log.debug("REST request to delete Article : {}", id);
         articleService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+    }
+
+    @PostMapping("/process-text")
+    public ResponseEntity<Map<String, Object>> processText(@RequestBody Map<String, String> request) {
+        String articleId = request.get("article_id");
+        String text = request.get("text");
+        String modelId = request.get("model_id");
+
+        Map<String, Object> result = nlpService.processText(articleId, text, modelId);
+
+        return ResponseEntity.ok(result);
     }
 }

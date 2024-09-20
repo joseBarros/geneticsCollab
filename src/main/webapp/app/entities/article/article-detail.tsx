@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './article.reducer';
 
+import HighlightEntity from 'app/shared/highlight/HighlightEntity';
+
 export const ArticleDetail = () => {
   const dispatch = useAppDispatch();
 
@@ -48,7 +50,7 @@ export const ArticleDetail = () => {
               <Translate contentKey="geneticsCollabApp.article.text">Text</Translate>
             </span>
           </dt>
-          <dd>{articleEntity.text}</dd>
+          <dd><HighlightEntity text={articleEntity.text || ''} entities={articleEntity.entities || []} /></dd>
           <dt>
             <span id="file">
               <Translate contentKey="geneticsCollabApp.article.file">File</Translate>

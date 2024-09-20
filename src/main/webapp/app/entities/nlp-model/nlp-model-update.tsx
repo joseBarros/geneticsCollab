@@ -126,7 +126,7 @@ export const NLPModelUpdate = () => {
                 data-cy="notes"
                 type="text"
               />
-              <ValidatedField
+              {/*<ValidatedField
                 label={translate('geneticsCollabApp.nLPModel.tags')}
                 id="nlp-model-tags"
                 data-cy="tags"
@@ -142,7 +142,7 @@ export const NLPModelUpdate = () => {
                       </option>
                     ))
                   : null}
-              </ValidatedField>
+              </ValidatedField>*/}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/nlp-model" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

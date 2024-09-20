@@ -132,23 +132,23 @@ export const ArticleUpdate = () => {
                 data-cy="file"
                 openActionLabel={translate('entity.action.open')}
               />
-              <ValidatedField
-                label={translate('geneticsCollabApp.article.entities')}
-                id="article-entities"
-                data-cy="entities"
-                type="select"
-                multiple
-                name="entities"
-              >
-                <option value="" key="0" />
-                {namedEntities
-                  ? namedEntities.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.text}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+              {/*<ValidatedField*/}
+              {/*  label={translate('geneticsCollabApp.article.entities')}*/}
+              {/*  id="article-entities"*/}
+              {/*  data-cy="entities"*/}
+              {/*  type="select"*/}
+              {/*  multiple*/}
+              {/*  name="entities"*/}
+              {/*>*/}
+              {/*  <option value="" key="0" />*/}
+              {/*  {namedEntities*/}
+              {/*    ? namedEntities.map(otherEntity => (*/}
+              {/*        <option value={otherEntity.id} key={otherEntity.id}>*/}
+              {/*          {otherEntity.text}*/}
+              {/*        </option>*/}
+              {/*      ))*/}
+              {/*    : null}*/}
+              {/*</ValidatedField>*/}
               <ValidatedField
                 id="article-model"
                 name="model"
@@ -160,7 +160,7 @@ export const ArticleUpdate = () => {
                 {nLPModels
                   ? nLPModels.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.name}
                       </option>
                     ))
                   : null}
