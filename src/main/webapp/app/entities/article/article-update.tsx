@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, Translate, translate, ValidatedField, ValidatedForm, ValidatedBlobField } from 'react-jhipster';
+import { Button, Row, Col } from 'reactstrap';
+import {
+  Translate,
+  translate,
+  ValidatedField,
+  ValidatedForm,
+  ValidatedBlobField,
+  openFile, byteSize
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -74,6 +81,8 @@ export const ArticleUpdate = () => {
           ...articleEntity,
           entities: articleEntity?.entities?.map(e => e.id.toString()),
           model: articleEntity?.model?.id,
+          file: articleEntity?.file,
+          text: articleEntity?.text,
         };
 
   return (
@@ -111,20 +120,6 @@ export const ArticleUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField
-                label={translate('geneticsCollabApp.article.summary')}
-                id="article-summary"
-                name="summary"
-                data-cy="summary"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('geneticsCollabApp.article.text')}
-                id="article-text"
-                name="text"
-                data-cy="text"
-                type="text"
-              />
               <ValidatedBlobField
                 label={translate('geneticsCollabApp.article.file')}
                 id="article-file"
@@ -132,7 +127,23 @@ export const ArticleUpdate = () => {
                 data-cy="file"
                 openActionLabel={translate('entity.action.open')}
               />
-              {/*<ValidatedField*/}
+              <ValidatedField
+                label={translate('geneticsCollabApp.article.text')}
+                id="article-text"
+                name="text"
+                data-cy="text"
+                type="textarea"
+                defaultValue={articleEntity?.text}
+                style={{height: "250px"}}
+              />
+              {/* <ValidatedField
+                label={translate('geneticsCollabApp.article.summary')}
+                id="article-summary"
+                name="summary"
+                data-cy="summary"
+                type="text"
+              />*/}
+              {/* <ValidatedField*/}
               {/*  label={translate('geneticsCollabApp.article.entities')}*/}
               {/*  id="article-entities"*/}
               {/*  data-cy="entities"*/}
@@ -159,10 +170,10 @@ export const ArticleUpdate = () => {
                 <option value="" key="0" />
                 {nLPModels
                   ? nLPModels.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.name}
-                      </option>
-                    ))
+                    <option value={otherEntity.id} key={otherEntity.id}>
+                      {otherEntity.name}
+                    </option>
+                  ))
                   : null}
               </ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/article" replace color="info">

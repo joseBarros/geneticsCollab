@@ -152,7 +152,7 @@ export const Article = () => {
                       <div>
                         {article.fileContentType ? (
                           <a onClick={openFile(article.fileContentType, article.file)}>
-                            <Translate contentKey="entity.action.open">Open</Translate>
+                            <Translate contentKey="entity.action.open">Open File</Translate>
                             &nbsp;
                           </a>
                         ) : null}
@@ -162,7 +162,7 @@ export const Article = () => {
                       </div>
                     ) : null}
                   </td>
-                  <td>{article.model ? <Link to={`/nlp-model/${article.model.id}`}>{article.model.id}</Link> : ''}</td>
+                  <td>{article.model ? <Link to={`/nlp-model/${article.model.id}`}>{article.model.name}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/article/${article.id}`} color="info" size="sm" data-cy="entityDetailsButton">

@@ -333,7 +333,7 @@ class ArticleResourceIT {
         Article partialUpdatedArticle = new Article();
         partialUpdatedArticle.setId(article.getId());
 
-        partialUpdatedArticle.title(UPDATED_TITLE).text(UPDATED_TEXT);
+        partialUpdatedArticle.title(UPDATED_TITLE).file(UPDATED_FILE).fileContentType(UPDATED_FILE_CONTENT_TYPE);
 
         restArticleMockMvc
             .perform(
@@ -349,9 +349,9 @@ class ArticleResourceIT {
         Article testArticle = articleList.get(articleList.size() - 1);
         assertThat(testArticle.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testArticle.getSummary()).isEqualTo(DEFAULT_SUMMARY);
-        assertThat(testArticle.getText()).isEqualTo(UPDATED_TEXT);
-        assertThat(testArticle.getFile()).isEqualTo(DEFAULT_FILE);
-        assertThat(testArticle.getFileContentType()).isEqualTo(DEFAULT_FILE_CONTENT_TYPE);
+        assertThat(testArticle.getText()).isEqualTo(DEFAULT_TEXT);
+        assertThat(testArticle.getFile()).isEqualTo(UPDATED_FILE);
+        assertThat(testArticle.getFileContentType()).isEqualTo(UPDATED_FILE_CONTENT_TYPE);
     }
 
     @Test

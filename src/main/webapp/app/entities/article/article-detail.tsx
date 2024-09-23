@@ -40,18 +40,6 @@ export const ArticleDetail = () => {
           </dt>
           <dd>{articleEntity.title}</dd>
           <dt>
-            <span id="summary">
-              <Translate contentKey="geneticsCollabApp.article.summary">Summary</Translate>
-            </span>
-          </dt>
-          <dd>{articleEntity.summary}</dd>
-          <dt>
-            <span id="text">
-              <Translate contentKey="geneticsCollabApp.article.text">Text</Translate>
-            </span>
-          </dt>
-          <dd><HighlightEntity text={articleEntity.text || ''} entities={articleEntity.entities || []} /></dd>
-          <dt>
             <span id="file">
               <Translate contentKey="geneticsCollabApp.article.file">File</Translate>
             </span>
@@ -70,23 +58,35 @@ export const ArticleDetail = () => {
               </div>
             ) : null}
           </dd>
+          {/*          <dt>
+            <span id="summary">
+              <Translate contentKey="geneticsCollabApp.article.summary">Summary</Translate>
+            </span>
+          </dt>
+          <dd>{articleEntity.summary}</dd>*/}
+          <dt>
+            <span id="text">
+              <Translate contentKey="geneticsCollabApp.article.text">Text</Translate>
+            </span>
+          </dt>
+          <dd><HighlightEntity text={articleEntity.text || ''} entities={articleEntity.entities || []} /></dd>
           <dt>
             <Translate contentKey="geneticsCollabApp.article.entities">Entities</Translate>
           </dt>
           <dd>
             {articleEntity.entities
               ? articleEntity.entities.map((val, i) => (
-                  <span key={val.id}>
+                <span key={val.id}>
                     <a>{val.text}</a>
-                    {articleEntity.entities && i === articleEntity.entities.length - 1 ? '' : ', '}
+                  {articleEntity.entities && i === articleEntity.entities.length - 1 ? '' : ', '}
                   </span>
-                ))
+              ))
               : null}
           </dd>
           <dt>
             <Translate contentKey="geneticsCollabApp.article.model">Model</Translate>
           </dt>
-          <dd>{articleEntity.model ? articleEntity.model.id : ''}</dd>
+          <dd>{articleEntity.model ? articleEntity.model.name : ''}</dd>
         </dl>
         <Button tag={Link} to="/article" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

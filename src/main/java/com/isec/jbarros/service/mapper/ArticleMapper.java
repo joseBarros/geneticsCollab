@@ -28,6 +28,7 @@ public interface ArticleMapper extends EntityMapper<ArticleDTO, Article> {
     @Mapping(target = "text", source = "text")
     @Mapping(target = "startChar", source = "startChar")
     @Mapping(target = "endChar", source = "endChar")
+    @Mapping(target = "tags", source = "tags")
     NamedEntityDTO toDtoNamedEntityText(NamedEntity namedEntity);
 
     @Named("namedEntityTextSet")
@@ -38,5 +39,6 @@ public interface ArticleMapper extends EntityMapper<ArticleDTO, Article> {
     @Named("nLPModelId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
     NLPModelDTO toDtoNLPModelId(NLPModel nLPModel);
 }

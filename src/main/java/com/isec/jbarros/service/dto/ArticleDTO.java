@@ -126,8 +126,4 @@ public class ArticleDTO implements Serializable {
             ", model=" + getModel() +
             "}";
     }
-
-    public String getDisplayText(){
-        return this.text.substring(0,100);
-    }
 }

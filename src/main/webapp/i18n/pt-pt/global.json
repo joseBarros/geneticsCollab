@@ -99,7 +99,7 @@
       "cancel": "Cancelar",
       "delete": "Eliminar",
       "edit": "Editar",
-      "open": "Abrir",
+      "open": "Abrir Ficheiro",
       "save": "Guardar",
       "view": "Visualizar",
       "show": "Show {{otherEntity}}"

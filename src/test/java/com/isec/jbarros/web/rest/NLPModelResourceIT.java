@@ -311,7 +311,7 @@ class NLPModelResourceIT {
         NLPModel partialUpdatedNLPModel = new NLPModel();
         partialUpdatedNLPModel.setId(nLPModel.getId());
 
-        partialUpdatedNLPModel.framework(UPDATED_FRAMEWORK);
+        partialUpdatedNLPModel.name(UPDATED_NAME).notes(UPDATED_NOTES);
 
         restNLPModelMockMvc
             .perform(
@@ -325,10 +325,10 @@ class NLPModelResourceIT {
         List<NLPModel> nLPModelList = nLPModelRepository.findAll();
         assertThat(nLPModelList).hasSize(databaseSizeBeforeUpdate);
         NLPModel testNLPModel = nLPModelList.get(nLPModelList.size() - 1);
-        assertThat(testNLPModel.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testNLPModel.getFramework()).isEqualTo(UPDATED_FRAMEWORK);
+        assertThat(testNLPModel.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testNLPModel.getFramework()).isEqualTo(DEFAULT_FRAMEWORK);
         assertThat(testNLPModel.getPath()).isEqualTo(DEFAULT_PATH);
-        assertThat(testNLPModel.getNotes()).isEqualTo(DEFAULT_NOTES);
+        assertThat(testNLPModel.getNotes()).isEqualTo(UPDATED_NOTES);
     }
 
     @Test

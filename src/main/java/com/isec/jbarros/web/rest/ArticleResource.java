@@ -18,7 +18,6 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,6 +74,7 @@ public class ArticleResource {
         extractText(articleDTO);
         ArticleDTO result = articleService.save(articleDTO);
         extractEntities(result);
+        articleService.update(result);
         return ResponseEntity
             .created(new URI("/api/articles/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
