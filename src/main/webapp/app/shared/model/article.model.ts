@@ -4,10 +4,11 @@ import { INLPModel } from 'app/shared/model/nlp-model.model';
 export interface IArticle {
   id?: string;
   title?: string;
-  summary?: string | null;
   text?: string | null;
   fileContentType?: string | null;
   file?: string | null;
+  interactionsImageContentType?: string | null;
+  interactionsImage?: string | null;
   entities?: INamedEntity[] | null;
   model?: INLPModel | null;
 }

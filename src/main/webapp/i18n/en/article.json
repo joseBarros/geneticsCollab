@@ -19,9 +19,9 @@
       },
       "id": "ID",
       "title": "Title",
-      "summary": "Summary",
       "text": "Text",
       "file": "File",
+      "interactionsImage": "Interactions Image",
       "entities": "Entities",
       "model": "Model"
     }

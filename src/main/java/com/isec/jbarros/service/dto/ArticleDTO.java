@@ -17,13 +17,14 @@ public class ArticleDTO implements Serializable {
     @NotNull
     private String title;
 
-    private String summary;
-
     private String text;
 
     private byte[] file;
 
     private String fileContentType;
+    private byte[] interactionsImage;
+
+    private String interactionsImageContentType;
     private Set<NamedEntityDTO> entities = new HashSet<>();
 
     private NLPModelDTO model;
@@ -42,14 +43,6 @@ public class ArticleDTO implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
     }
 
     public String getText() {
@@ -74,6 +67,22 @@ public class ArticleDTO implements Serializable {
 
     public void setFileContentType(String fileContentType) {
         this.fileContentType = fileContentType;
+    }
+
+    public byte[] getInteractionsImage() {
+        return interactionsImage;
+    }
+
+    public void setInteractionsImage(byte[] interactionsImage) {
+        this.interactionsImage = interactionsImage;
+    }
+
+    public String getInteractionsImageContentType() {
+        return interactionsImageContentType;
+    }
+
+    public void setInteractionsImageContentType(String interactionsImageContentType) {
+        this.interactionsImageContentType = interactionsImageContentType;
     }
 
     public Set<NamedEntityDTO> getEntities() {
@@ -119,9 +128,9 @@ public class ArticleDTO implements Serializable {
         return "ArticleDTO{" +
             "id='" + getId() + "'" +
             ", title='" + getTitle() + "'" +
-            ", summary='" + getSummary() + "'" +
             ", text='" + getText() + "'" +
             ", file='" + getFile() + "'" +
+            ", interactionsImage='" + getInteractionsImage() + "'" +
             ", entities=" + getEntities() +
             ", model=" + getModel() +
             "}";

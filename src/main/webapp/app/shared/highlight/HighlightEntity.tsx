@@ -39,18 +39,18 @@ const HighlightEntity: React.FC<HighlightEntityProps> = ({ text, entities }) => 
   const [colorMap, setColorMap] = useState<Record<string, string>>({});
 
   const getEntityColor = (tagLabel: string): string => {
-    const normalizedLabel = normalizeTagLabel(tagLabel);
+    //const normalizedLabel = normalizeTagLabel(tagLabel);
 
     // If the color for this entity type is already generated, use it
-    if (colorMap[normalizedLabel]) {
-      return colorMap[normalizedLabel];
+    if (colorMap[tagLabel]) {
+      return colorMap[tagLabel];
     }
 
     // Otherwise, generate a new color and store it in the map
-    const color = hashStringToColor(normalizedLabel);
+    const color = hashStringToColor(tagLabel);
     setColorMap(prevColorMap => ({
       ...prevColorMap,
-      [normalizedLabel]: color
+      [tagLabel]: color
     }));
 
     return color;
@@ -60,7 +60,9 @@ const HighlightEntity: React.FC<HighlightEntityProps> = ({ text, entities }) => 
     let lastIndex = 0;
     const highlightedText: React.ReactNode[] = [];
 
-    entities?.forEach((entity, idx) => {
+    const sorted = [...entities].sort((a, b) => parseInt(a.startChar, 10) - parseInt(b.endChar, 10));
+
+    sorted?.forEach((entity, idx) => {
       if (!entity.startChar || !entity.endChar) {
         console.warn(`Skipping entity ${idx} due to missing startChar or endChar`);
         return;
@@ -68,28 +70,28 @@ const HighlightEntity: React.FC<HighlightEntityProps> = ({ text, entities }) => 
 
       const start = parseInt(entity.startChar, 10);
       const end = parseInt(entity.endChar, 10);
-
-      if (lastIndex < start) {
-        highlightedText.push(text.slice(lastIndex, start));
-      }
+      // eslint-disable-next-line no-console
+      console.log(entity.text + " - " + start + "," + end)
 
       // Map over tags and normalize the label to handle IOB format
-      const tagLabels = entity.tags?.map(tag => normalizeTagLabel(tag?.label || "Unknown")).join(", ") || "No Tags";
+      //const tagLabels = entity.tags?.map(tag => normalizeTagLabel(tag?.label || "Unknown")).join(", ") || "No Tags";
+      const tagLabels = entity.tags?.map(tag => tag?.label || "Unknown").join(", ") || "No Tags";
       const entityColor = getEntityColor(tagLabels);
+
+      highlightedText.push(text.substring(lastIndex, start));
 
       // Push the highlighted entity with the tag(s) and color
       highlightedText.push(
         <span key={idx} className="highlight" style={{ backgroundColor: entityColor }}>
-          {text.slice(start, end)} <strong className="tag">[{tagLabels}]</strong>
+          {entity.text} <strong className="tag">{tagLabels}</strong>
         </span>
       );
 
+      //highlightedText.push(text.slice(end, start));
       lastIndex = end;
     });
 
-    if (lastIndex < text.length) {
-      highlightedText.push(text.slice(lastIndex));
-    }
+    highlightedText.push(text.substring(lastIndex, text.length));
 
     return highlightedText;
   };

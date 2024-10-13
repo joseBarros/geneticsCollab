@@ -26,9 +26,6 @@ public class Article implements Serializable {
     @Field("title")
     private String title;
 
-    @Field("summary")
-    private String summary;
-
     @Field("text")
     private String text;
 
@@ -37,6 +34,12 @@ public class Article implements Serializable {
 
     @Field("file_content_type")
     private String fileContentType;
+
+    @Field("interactions_image")
+    private byte[] interactionsImage;
+
+    @Field("interactions_image_content_type")
+    private String interactionsImageContentType;
 
     @DBRef
     @Field("entities")
@@ -76,19 +79,6 @@ public class Article implements Serializable {
         this.title = title;
     }
 
-    public String getSummary() {
-        return this.summary;
-    }
-
-    public Article summary(String summary) {
-        this.setSummary(summary);
-        return this;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
     public String getText() {
         return this.text;
     }
@@ -126,6 +116,32 @@ public class Article implements Serializable {
 
     public void setFileContentType(String fileContentType) {
         this.fileContentType = fileContentType;
+    }
+
+    public byte[] getInteractionsImage() {
+        return this.interactionsImage;
+    }
+
+    public Article interactionsImage(byte[] interactionsImage) {
+        this.setInteractionsImage(interactionsImage);
+        return this;
+    }
+
+    public void setInteractionsImage(byte[] interactionsImage) {
+        this.interactionsImage = interactionsImage;
+    }
+
+    public String getInteractionsImageContentType() {
+        return this.interactionsImageContentType;
+    }
+
+    public Article interactionsImageContentType(String interactionsImageContentType) {
+        this.interactionsImageContentType = interactionsImageContentType;
+        return this;
+    }
+
+    public void setInteractionsImageContentType(String interactionsImageContentType) {
+        this.interactionsImageContentType = interactionsImageContentType;
     }
 
     public Set<NamedEntity> getEntities() {
@@ -189,10 +205,11 @@ public class Article implements Serializable {
         return "Article{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
-            ", summary='" + getSummary() + "'" +
             ", text='" + getText() + "'" +
             ", file='" + getFile() + "'" +
             ", fileContentType='" + getFileContentType() + "'" +
+            ", interactionsImage='" + getInteractionsImage() + "'" +
+            ", interactionsImageContentType='" + getInteractionsImageContentType() + "'" +
             "}";
     }
 }

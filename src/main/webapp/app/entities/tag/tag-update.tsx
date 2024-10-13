@@ -107,6 +107,7 @@ export const TagUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
+              <ValidatedField label={translate('geneticsCollabApp.tag.color')} id="tag-color" name="color" data-cy="color" type="text" />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/tag" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

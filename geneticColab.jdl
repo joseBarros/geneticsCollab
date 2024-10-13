@@ -37,6 +37,7 @@ entity Article {
     summary String
     text String
     file AnyBlob
+    interactionsImage ImageBlob
 }
 entity NamedEntity {
     text String required
@@ -63,6 +64,7 @@ relationship ManyToMany {
 
 relationship OneToMany {
     NLPModel{article} to Article{model}
+    Tag{tag} to NamedEntity{entidade}
 }
 
 dto Article, NamedEntity, Tag, NLPModel with mapstruct

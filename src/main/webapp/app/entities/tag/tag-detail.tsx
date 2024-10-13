@@ -37,6 +37,12 @@ export const TagDetail = () => {
             </span>
           </dt>
           <dd>{tagEntity.label}</dd>
+          <dt>
+            <span id="color">
+              <Translate contentKey="geneticsCollabApp.tag.color">Color</Translate>
+            </span>
+          </dt>
+          <dd>{tagEntity.color}</dd>
         </dl>
         <Button tag={Link} to="/tag" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

@@ -6,6 +6,9 @@ import com.isec.jbarros.domain.NamedEntity;
 import com.isec.jbarros.service.dto.ArticleDTO;
 import com.isec.jbarros.service.dto.NLPModelDTO;
 import com.isec.jbarros.service.dto.NamedEntityDTO;
+
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
@@ -33,12 +36,13 @@ public interface ArticleMapper extends EntityMapper<ArticleDTO, Article> {
 
     @Named("namedEntityTextSet")
     default Set<NamedEntityDTO> toDtoNamedEntityTextSet(Set<NamedEntity> namedEntity) {
-        return namedEntity.stream().map(this::toDtoNamedEntityText).collect(Collectors.toSet());
+        return namedEntity.stream().map(this::toDtoNamedEntityText).sorted(Comparator.comparingInt(dto -> Integer.parseInt(dto.getStartChar()))).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Named("nLPModelId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "tags", source = "tags")
     NLPModelDTO toDtoNLPModelId(NLPModel nLPModel);
 }

@@ -19,6 +19,7 @@
       },
       "id": "ID",
       "label": "Label",
+      "color": "Color",
       "namedEntity": "Named Entity",
       "nLPModel": "N LP Model"
     }

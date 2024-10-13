@@ -1,0 +1,13 @@
+.badge-info {
+  background-color: #5bc0de;
+  color: white;
+  cursor: pointer;
+  padding: 0.2em 0.6em;
+  margin: 0 0.25em;
+  line-height: 1;
+  border-radius: 0.35em;
+}
+
+.badge-info:hover {
+  background-color: #31b0d5;
+}

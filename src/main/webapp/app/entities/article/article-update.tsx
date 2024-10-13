@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
-import {
-  Translate,
-  translate,
-  ValidatedField,
-  ValidatedForm,
-  ValidatedBlobField,
-  openFile, byteSize
-} from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm, ValidatedBlobField } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -21,6 +14,7 @@ import { INLPModel } from 'app/shared/model/nlp-model.model';
 import { getEntities as getNLpModels } from 'app/entities/nlp-model/nlp-model.reducer';
 import { IArticle } from 'app/shared/model/article.model';
 import { getEntity, updateEntity, createEntity, reset } from './article.reducer';
+import HighlightEntity from 'app/shared/highlight/HighlightEntity';
 
 export const ArticleUpdate = () => {
   const dispatch = useAppDispatch();
@@ -81,8 +75,6 @@ export const ArticleUpdate = () => {
           ...articleEntity,
           entities: articleEntity?.entities?.map(e => e.id.toString()),
           model: articleEntity?.model?.id,
-          file: articleEntity?.file,
-          text: articleEntity?.text,
         };
 
   return (
@@ -120,6 +112,22 @@ export const ArticleUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
+              <ValidatedField
+                id="article-model"
+                name="model"
+                data-cy="model"
+                label={translate('geneticsCollabApp.article.model')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {nLPModels
+                  ? nLPModels.map(otherEntity => (
+                    <option value={otherEntity.id} key={otherEntity.id}>
+                      {otherEntity.name}
+                    </option>
+                  ))
+                  : null}
+              </ValidatedField>
               <ValidatedBlobField
                 label={translate('geneticsCollabApp.article.file')}
                 id="article-file"
@@ -134,15 +142,8 @@ export const ArticleUpdate = () => {
                 data-cy="text"
                 type="textarea"
                 defaultValue={articleEntity?.text}
-                style={{height: "250px"}}
+                style={{height: '250px'}}
               />
-              {/* <ValidatedField
-                label={translate('geneticsCollabApp.article.summary')}
-                id="article-summary"
-                name="summary"
-                data-cy="summary"
-                type="text"
-              />*/}
               {/* <ValidatedField*/}
               {/*  label={translate('geneticsCollabApp.article.entities')}*/}
               {/*  id="article-entities"*/}
@@ -160,22 +161,14 @@ export const ArticleUpdate = () => {
               {/*      ))*/}
               {/*    : null}*/}
               {/*</ValidatedField>*/}
-              <ValidatedField
-                id="article-model"
-                name="model"
-                data-cy="model"
-                label={translate('geneticsCollabApp.article.model')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {nLPModels
-                  ? nLPModels.map(otherEntity => (
-                    <option value={otherEntity.id} key={otherEntity.id}>
-                      {otherEntity.name}
-                    </option>
-                  ))
-                  : null}
-              </ValidatedField>
+              {/*<ValidatedBlobField*/}
+              {/*  label={translate('geneticsCollabApp.article.interactionsImage')}*/}
+              {/*  id="article-interactionsImage"*/}
+              {/*  name="interactionsImage"*/}
+              {/*  data-cy="interactionsImage"*/}
+              {/*  isImage*/}
+              {/*  accept="image/*"*/}
+              {/*/>*/}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/article" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

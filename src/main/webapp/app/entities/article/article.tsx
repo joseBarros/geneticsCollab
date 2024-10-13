@@ -118,10 +118,6 @@ export const Article = () => {
                   <Translate contentKey="geneticsCollabApp.article.title">Title</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('title')} />
                 </th>
-                <th className="hand" onClick={sort('summary')}>
-                  <Translate contentKey="geneticsCollabApp.article.summary">Summary</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('summary')} />
-                </th>
                 <th className="hand" onClick={sort('text')}>
                   <Translate contentKey="geneticsCollabApp.article.text">Text</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('text')} />
@@ -129,6 +125,10 @@ export const Article = () => {
                 <th className="hand" onClick={sort('file')}>
                   <Translate contentKey="geneticsCollabApp.article.file">File</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('file')} />
+                </th>
+                <th className="hand" onClick={sort('interactionsImage')}>
+                  <Translate contentKey="geneticsCollabApp.article.interactionsImage">Interactions Image</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('interactionsImage')} />
                 </th>
                 <th>
                   <Translate contentKey="geneticsCollabApp.article.model">Model</Translate> <FontAwesomeIcon icon="sort" />
@@ -145,12 +145,11 @@ export const Article = () => {
                     </Button>
                   </td>
                   <td>{article.title}</td>
-                  <td>{article.summary}</td>
-                  <td>{article.text}</td>
+                  <td>{article != null && article.text.length > 100 ? article.text.substring(0, 99) + '...' : article.text}</td>
                   <td>
                     {article.file ? (
                       <div>
-                        {article.fileContentType ? (
+                      {article.fileContentType ? (
                           <a onClick={openFile(article.fileContentType, article.file)}>
                             <Translate contentKey="entity.action.open">Open File</Translate>
                             &nbsp;
@@ -158,6 +157,24 @@ export const Article = () => {
                         ) : null}
                         <span>
                           {article.fileContentType}, {byteSize(article.file)}
+                        </span>
+                      </div>
+                    ) : null}
+                  </td>
+                  <td>
+                    {article.interactionsImage ? (
+                      <div>
+                        {article.interactionsImageContentType ? (
+                          <a onClick={openFile(article.interactionsImageContentType, article.interactionsImage)}>
+                            <img
+                              src={`data:${article.interactionsImageContentType};base64,${article.interactionsImage}`}
+                              style={{ maxHeight: '30px' }}
+                            />
+                            &nbsp;
+                          </a>
+                        ) : null}
+                        <span>
+                          {article.interactionsImageContentType}, {byteSize(article.interactionsImage)}
                         </span>
                       </div>
                     ) : null}

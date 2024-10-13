@@ -258,8 +258,6 @@ class TagResourceIT {
         Tag partialUpdatedTag = new Tag();
         partialUpdatedTag.setId(tag.getId());
 
-        partialUpdatedTag.label(UPDATED_LABEL);
-
         restTagMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedTag.getId())
@@ -272,7 +270,7 @@ class TagResourceIT {
         List<Tag> tagList = tagRepository.findAll();
         assertThat(tagList).hasSize(databaseSizeBeforeUpdate);
         Tag testTag = tagList.get(tagList.size() - 1);
-        assertThat(testTag.getLabel()).isEqualTo(UPDATED_LABEL);
+        assertThat(testTag.getLabel()).isEqualTo(DEFAULT_LABEL);
     }
 
     @Test

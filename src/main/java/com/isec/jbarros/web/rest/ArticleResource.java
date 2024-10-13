@@ -4,7 +4,10 @@ import com.isec.jbarros.repository.ArticleRepository;
 import com.isec.jbarros.service.ArticleService;
 import com.isec.jbarros.service.NLPService;
 import com.isec.jbarros.service.PDFService;
+import com.isec.jbarros.service.StringDBService;
 import com.isec.jbarros.service.dto.ArticleDTO;
+import com.isec.jbarros.service.dto.NamedEntityDTO;
+import com.isec.jbarros.service.dto.TagDTO;
 import com.isec.jbarros.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -12,10 +15,11 @@ import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,11 +55,14 @@ public class ArticleResource {
 
     private final PDFService pdfService;
 
-    public ArticleResource(ArticleService articleService, ArticleRepository articleRepository, NLPService nlpService, PDFService pdfService) {
+    private final StringDBService stringDBService;
+
+    public ArticleResource(ArticleService articleService, ArticleRepository articleRepository, NLPService nlpService, PDFService pdfService, StringDBService stringDBService) {
         this.articleService = articleService;
         this.articleRepository = articleRepository;
         this.nlpService = nlpService;
         this.pdfService = pdfService;
+        this.stringDBService = stringDBService;
     }
 
     /**
@@ -73,19 +80,41 @@ public class ArticleResource {
         }
         extractText(articleDTO);
         ArticleDTO result = articleService.save(articleDTO);
-        extractEntities(result);
-        articleService.update(result);
+        Map<String, Object> stringObjectMap = extractEntities(result);
+        assert stringObjectMap != null;
+
+        callStringIfProteinEntities(stringObjectMap, result);
+
+
+
+        //articleService.update(result);
         return ResponseEntity
             .created(new URI("/api/articles/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
             .body(result);
     }
 
-    private void extractEntities(ArticleDTO result) {
+    private void callStringIfProteinEntities(Map<String, Object> stringObjectMap, ArticleDTO result) {
+        Object entities = stringObjectMap.get("entities");
+
+        // Assuming entities is a list or a map, you can cast and loop through it
+        if (entities instanceof List) {
+            List<Map<String, Object>> entitiesList = (List<Map<String, Object>>) entities;
+
+            List<Map<String, Object>> filteredEntitiesList = entitiesList.stream()
+                .filter(entity -> entity.get("label").toString().toLowerCase().contains("protein"))
+                .collect(Collectors.toList());
+            stringObjectMap.put("entities",filteredEntitiesList);
+            extractSaveInteractionsImage(result, stringObjectMap);
+        }
+    }
+
+    private Map<String, Object> extractEntities(ArticleDTO result) {
         //Call NLP service responsible for NER
         if(result.getText()!=null && !result.getText().isEmpty() && result.getModel() != null && result.getModel().getId()!=null){
-            nlpService.processText(result.getId(), result.getText(), result.getModel().getId());
+            return nlpService.processText(result.getId(), result.getText(), result.getModel().getId());
         }
+        return null;
     }
 
     private void extractText(ArticleDTO articleDTO) {
@@ -128,13 +157,38 @@ public class ArticleResource {
         if (!articleRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
+
         extractText(articleDTO);
+
         ArticleDTO result = articleService.update(articleDTO);
-        extractEntities(result);
+        Map<String, Object> stringObjectMap = extractEntities(result);
+        assert stringObjectMap != null;
+        callStringIfProteinEntities(stringObjectMap, result);
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, articleDTO.getId()))
             .body(result);
+    }
+
+    private void extractSaveInteractionsImage(@RequestBody @Valid ArticleDTO articleDTO, Map<String, Object> stringObjectMap) {
+        if(stringObjectMap==null){
+            return;
+        }
+        Object entities = stringObjectMap.get("entities");
+        List<Map<String, Object>> entitiesList = (List<Map<String, Object>>) entities;
+        if(entities!=null && !entitiesList.isEmpty()){
+            try {
+                ArticleDTO articleDTOtobeUpdated = articleService.findOne(articleDTO.getId()).orElse(null);
+                assert articleDTOtobeUpdated != null;
+                byte[] byteSVG = stringDBService.generateInteractionGraphSVG(articleDTOtobeUpdated.getEntities());
+                articleDTOtobeUpdated.setInteractionsImage(byteSVG);
+                articleDTOtobeUpdated.setInteractionsImageContentType("image/svg+xml");
+                articleService.update(articleDTOtobeUpdated);
+            } catch (Exception e) {
+                throw new BadRequestAlertException("Unable to generate interactions graph", ENTITY_NAME, "interactionserror");
+            }
+        }
     }
 
     /**

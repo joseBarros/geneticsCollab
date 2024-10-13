@@ -10,10 +10,6 @@
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "summary",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "text",
       "fieldType": "String"
     },
@@ -21,6 +17,11 @@
       "fieldName": "file",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldName": "interactionsImage",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
     }
   ],
   "name": "Article",

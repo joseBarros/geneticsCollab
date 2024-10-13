@@ -8,6 +8,10 @@
       "fieldName": "label",
       "fieldType": "String",
       "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "color",
+      "fieldType": "String"
     }
   ],
   "name": "Tag",
