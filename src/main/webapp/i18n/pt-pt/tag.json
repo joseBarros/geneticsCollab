@@ -3,9 +3,10 @@
     "tag": {
       "home": {
         "title": "Tags",
-        "refreshListLabel": "Refresh list",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo(a) Tag",
         "createOrEditLabel": "Criar ou editar Tag",
+        "editLabel": "Editar Tag",
         "notFound": "Nenhum Tags encontrado"
       },
       "created": "Um novo Tag foi criado com o identificador {{ param }}",
@@ -19,9 +20,8 @@
       },
       "id": "ID",
       "label": "Label",
-      "color": "Color",
-      "namedEntity": "Named Entity",
-      "nLPModel": "N LP Model"
+      "namedEntities": "Named Entities",
+      "nlpModel": "Nlp Model"
     }
   }
 }

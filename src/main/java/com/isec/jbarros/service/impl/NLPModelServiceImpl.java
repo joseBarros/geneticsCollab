@@ -66,14 +66,10 @@ public class NLPModelServiceImpl implements NLPModelService {
         return nLPModelRepository.findAll(pageable).map(nLPModelMapper::toDto);
     }
 
-    public Page<NLPModelDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return nLPModelRepository.findAllWithEagerRelationships(pageable).map(nLPModelMapper::toDto);
-    }
-
     @Override
     public Optional<NLPModelDTO> findOne(String id) {
         log.debug("Request to get NLPModel : {}", id);
-        return nLPModelRepository.findOneWithEagerRelationships(id).map(nLPModelMapper::toDto);
+        return nLPModelRepository.findById(id).map(nLPModelMapper::toDto);
     }
 
     @Override

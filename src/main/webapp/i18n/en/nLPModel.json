@@ -6,6 +6,7 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new NLP Model",
         "createOrEditLabel": "Create or edit a NLP Model",
+        "editLabel": "Edit a NLP Model",
         "notFound": "No NLP Models found"
       },
       "created": "A new NLP Model is created with identifier {{ param }}",
@@ -22,8 +23,8 @@
       "framework": "Framework",
       "path": "Path",
       "notes": "Notes",
-      "article": "Article",
-      "tags": "Tags"
+      "tags": "Tags",
+      "articles": "Articles"
     }
   }
 }

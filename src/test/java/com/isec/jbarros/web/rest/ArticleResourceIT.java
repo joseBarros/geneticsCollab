@@ -2,28 +2,20 @@ package com.isec.jbarros.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.isec.jbarros.IntegrationTest;
 import com.isec.jbarros.domain.Article;
 import com.isec.jbarros.repository.ArticleRepository;
-import com.isec.jbarros.service.ArticleService;
 import com.isec.jbarros.service.dto.ArticleDTO;
 import com.isec.jbarros.service.mapper.ArticleMapper;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,7 +25,6 @@ import org.springframework.util.Base64Utils;
  * Integration tests for the {@link ArticleResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class ArticleResourceIT {
@@ -60,14 +51,8 @@ class ArticleResourceIT {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @Mock
-    private ArticleRepository articleRepositoryMock;
-
     @Autowired
     private ArticleMapper articleMapper;
-
-    @Mock
-    private ArticleService articleServiceMock;
 
     @Autowired
     private MockMvc restArticleMockMvc;
@@ -187,23 +172,6 @@ class ArticleResourceIT {
             .andExpect(jsonPath("$.[*].file").value(hasItem(Base64Utils.encodeToString(DEFAULT_FILE))))
             .andExpect(jsonPath("$.[*].interactionsImageContentType").value(hasItem(DEFAULT_INTERACTIONS_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].interactionsImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_INTERACTIONS_IMAGE))));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllArticlesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(articleServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restArticleMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(articleServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllArticlesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(articleServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restArticleMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(articleRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -342,10 +310,7 @@ class ArticleResourceIT {
         Article partialUpdatedArticle = new Article();
         partialUpdatedArticle.setId(article.getId());
 
-        partialUpdatedArticle
-            .title(UPDATED_TITLE)
-            .interactionsImage(UPDATED_INTERACTIONS_IMAGE)
-            .interactionsImageContentType(UPDATED_INTERACTIONS_IMAGE_CONTENT_TYPE);
+        partialUpdatedArticle.title(UPDATED_TITLE).file(UPDATED_FILE).fileContentType(UPDATED_FILE_CONTENT_TYPE);
 
         restArticleMockMvc
             .perform(
@@ -361,10 +326,10 @@ class ArticleResourceIT {
         Article testArticle = articleList.get(articleList.size() - 1);
         assertThat(testArticle.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testArticle.getText()).isEqualTo(DEFAULT_TEXT);
-        assertThat(testArticle.getFile()).isEqualTo(DEFAULT_FILE);
-        assertThat(testArticle.getFileContentType()).isEqualTo(DEFAULT_FILE_CONTENT_TYPE);
-        assertThat(testArticle.getInteractionsImage()).isEqualTo(UPDATED_INTERACTIONS_IMAGE);
-        assertThat(testArticle.getInteractionsImageContentType()).isEqualTo(UPDATED_INTERACTIONS_IMAGE_CONTENT_TYPE);
+        assertThat(testArticle.getFile()).isEqualTo(UPDATED_FILE);
+        assertThat(testArticle.getFileContentType()).isEqualTo(UPDATED_FILE_CONTENT_TYPE);
+        assertThat(testArticle.getInteractionsImage()).isEqualTo(DEFAULT_INTERACTIONS_IMAGE);
+        assertThat(testArticle.getInteractionsImageContentType()).isEqualTo(DEFAULT_INTERACTIONS_IMAGE_CONTENT_TYPE);
     }
 
     @Test

@@ -42,14 +42,14 @@ public class Article implements Serializable {
     private String interactionsImageContentType;
 
     @DBRef
-    @Field("entities")
-    @JsonIgnoreProperties(value = { "tags", "articles" }, allowSetters = true)
-    private Set<NamedEntity> entities = new HashSet<>();
+    @Field("namedEntities")
+    @JsonIgnoreProperties(value = { "article", "tag" }, allowSetters = true)
+    private Set<NamedEntity> namedEntities = new HashSet<>();
 
     @DBRef
-    @Field("model")
-    @JsonIgnoreProperties(value = { "articles", "tags" }, allowSetters = true)
-    private NLPModel model;
+    @Field("nlpModel")
+    @JsonIgnoreProperties(value = { "tags", "articles" }, allowSetters = true)
+    private NLPModel nlpModel;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -144,39 +144,47 @@ public class Article implements Serializable {
         this.interactionsImageContentType = interactionsImageContentType;
     }
 
-    public Set<NamedEntity> getEntities() {
-        return this.entities;
+    public Set<NamedEntity> getNamedEntities() {
+        return this.namedEntities;
     }
 
-    public void setEntities(Set<NamedEntity> namedEntities) {
-        this.entities = namedEntities;
+    public void setNamedEntities(Set<NamedEntity> namedEntities) {
+        if (this.namedEntities != null) {
+            this.namedEntities.forEach(i -> i.setArticle(null));
+        }
+        if (namedEntities != null) {
+            namedEntities.forEach(i -> i.setArticle(this));
+        }
+        this.namedEntities = namedEntities;
     }
 
-    public Article entities(Set<NamedEntity> namedEntities) {
-        this.setEntities(namedEntities);
+    public Article namedEntities(Set<NamedEntity> namedEntities) {
+        this.setNamedEntities(namedEntities);
         return this;
     }
 
-    public Article addEntities(NamedEntity namedEntity) {
-        this.entities.add(namedEntity);
+    public Article addNamedEntities(NamedEntity namedEntity) {
+        this.namedEntities.add(namedEntity);
+        namedEntity.setArticle(this);
         return this;
     }
 
-    public Article removeEntities(NamedEntity namedEntity) {
-        this.entities.remove(namedEntity);
+    public Article removeNamedEntities(NamedEntity namedEntity) {
+        this.namedEntities.remove(namedEntity);
+        namedEntity.setArticle(null);
         return this;
     }
 
-    public NLPModel getModel() {
-        return this.model;
+    public NLPModel getNlpModel() {
+        return this.nlpModel;
     }
 
-    public void setModel(NLPModel nLPModel) {
-        this.model = nLPModel;
+    public void setNlpModel(NLPModel nLPModel) {
+        this.nlpModel = nLPModel;
     }
 
-    public Article model(NLPModel nLPModel) {
-        this.setModel(nLPModel);
+    public Article nlpModel(NLPModel nLPModel) {
+        this.setNlpModel(nLPModel);
         return this;
     }
 

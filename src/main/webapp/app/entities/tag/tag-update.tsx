@@ -8,8 +8,6 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { INamedEntity } from 'app/shared/model/named-entity.model';
-import { getEntities as getNamedEntities } from 'app/entities/named-entity/named-entity.reducer';
 import { INLPModel } from 'app/shared/model/nlp-model.model';
 import { getEntities as getNLpModels } from 'app/entities/nlp-model/nlp-model.reducer';
 import { ITag } from 'app/shared/model/tag.model';
@@ -23,7 +21,6 @@ export const TagUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const namedEntities = useAppSelector(state => state.namedEntity.entities);
   const nLPModels = useAppSelector(state => state.nLPModel.entities);
   const tagEntity = useAppSelector(state => state.tag.entity);
   const loading = useAppSelector(state => state.tag.loading);
@@ -41,7 +38,6 @@ export const TagUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getNamedEntities({}));
     dispatch(getNLpModels({}));
   }, []);
 
@@ -56,6 +52,7 @@ export const TagUpdate = () => {
     const entity = {
       ...tagEntity,
       ...values,
+      nlpModel: nLPModels.find(it => it.id.toString() === values.nlpModel.toString()),
     };
 
     if (isNew) {
@@ -70,6 +67,7 @@ export const TagUpdate = () => {
       ? {}
       : {
           ...tagEntity,
+          nlpModel: tagEntity?.nlpModel?.id,
         };
 
   return (
@@ -77,7 +75,9 @@ export const TagUpdate = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="geneticsCollabApp.tag.home.createOrEditLabel" data-cy="TagCreateUpdateHeading">
-            <Translate contentKey="geneticsCollabApp.tag.home.createOrEditLabel">Create or edit a Tag</Translate>
+            {isNew
+              ? (<Translate contentKey="geneticsCollabApp.tag.home.createLabel">Create a Tag</Translate>)
+              : (<Translate contentKey="geneticsCollabApp.tag.home.editLabel">Edit a Tag</Translate>)}
           </h2>
         </Col>
       </Row>
@@ -107,7 +107,22 @@ export const TagUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField label={translate('geneticsCollabApp.tag.color')} id="tag-color" name="color" data-cy="color" type="text" />
+              {/*<ValidatedField*/}
+              {/*  id="tag-nlpModel"*/}
+              {/*  name="nlpModel"*/}
+              {/*  data-cy="nlpModel"*/}
+              {/*  label={translate('geneticsCollabApp.tag.nlpModel')}*/}
+              {/*  type="select"*/}
+              {/*>*/}
+              {/*  <option value="" key="0" />*/}
+              {/*  {nLPModels*/}
+              {/*    ? nLPModels.map(otherEntity => (*/}
+              {/*        <option value={otherEntity.id} key={otherEntity.id}>*/}
+              {/*          {otherEntity.id}*/}
+              {/*        </option>*/}
+              {/*      ))*/}
+              {/*    : null}*/}
+              {/*</ValidatedField>*/}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/tag" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

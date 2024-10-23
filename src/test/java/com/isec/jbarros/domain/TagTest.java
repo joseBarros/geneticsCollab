@@ -27,46 +27,36 @@ class TagTest {
     }
 
     @Test
-    void namedEntityTest() throws Exception {
+    void namedEntitiesTest() throws Exception {
         Tag tag = getTagRandomSampleGenerator();
         NamedEntity namedEntityBack = getNamedEntityRandomSampleGenerator();
 
-        tag.addNamedEntity(namedEntityBack);
+        tag.addNamedEntities(namedEntityBack);
         assertThat(tag.getNamedEntities()).containsOnly(namedEntityBack);
-        assertThat(namedEntityBack.getTags()).containsOnly(tag);
+        assertThat(namedEntityBack.getTag()).isEqualTo(tag);
 
-        tag.removeNamedEntity(namedEntityBack);
+        tag.removeNamedEntities(namedEntityBack);
         assertThat(tag.getNamedEntities()).doesNotContain(namedEntityBack);
-        assertThat(namedEntityBack.getTags()).doesNotContain(tag);
+        assertThat(namedEntityBack.getTag()).isNull();
 
         tag.namedEntities(new HashSet<>(Set.of(namedEntityBack)));
         assertThat(tag.getNamedEntities()).containsOnly(namedEntityBack);
-        assertThat(namedEntityBack.getTags()).containsOnly(tag);
+        assertThat(namedEntityBack.getTag()).isEqualTo(tag);
 
         tag.setNamedEntities(new HashSet<>());
         assertThat(tag.getNamedEntities()).doesNotContain(namedEntityBack);
-        assertThat(namedEntityBack.getTags()).doesNotContain(tag);
+        assertThat(namedEntityBack.getTag()).isNull();
     }
 
     @Test
-    void nLPModelTest() throws Exception {
+    void nlpModelTest() throws Exception {
         Tag tag = getTagRandomSampleGenerator();
         NLPModel nLPModelBack = getNLPModelRandomSampleGenerator();
 
-        tag.addNLPModel(nLPModelBack);
-        assertThat(tag.getNLPModels()).containsOnly(nLPModelBack);
-        assertThat(nLPModelBack.getTags()).containsOnly(tag);
+        tag.setNlpModel(nLPModelBack);
+        assertThat(tag.getNlpModel()).isEqualTo(nLPModelBack);
 
-        tag.removeNLPModel(nLPModelBack);
-        assertThat(tag.getNLPModels()).doesNotContain(nLPModelBack);
-        assertThat(nLPModelBack.getTags()).doesNotContain(tag);
-
-        tag.nLPModels(new HashSet<>(Set.of(nLPModelBack)));
-        assertThat(tag.getNLPModels()).containsOnly(nLPModelBack);
-        assertThat(nLPModelBack.getTags()).containsOnly(tag);
-
-        tag.setNLPModels(new HashSet<>());
-        assertThat(tag.getNLPModels()).doesNotContain(nLPModelBack);
-        assertThat(nLPModelBack.getTags()).doesNotContain(tag);
+        tag.nlpModel(null);
+        assertThat(tag.getNlpModel()).isNull();
     }
 }

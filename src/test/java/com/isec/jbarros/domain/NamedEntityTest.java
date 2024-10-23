@@ -6,8 +6,6 @@ import static com.isec.jbarros.domain.TagTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.isec.jbarros.web.rest.TestUtil;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class NamedEntityTest {
@@ -27,42 +25,26 @@ class NamedEntityTest {
     }
 
     @Test
-    void tagsTest() throws Exception {
-        NamedEntity namedEntity = getNamedEntityRandomSampleGenerator();
-        Tag tagBack = getTagRandomSampleGenerator();
-
-        namedEntity.addTags(tagBack);
-        assertThat(namedEntity.getTags()).containsOnly(tagBack);
-
-        namedEntity.removeTags(tagBack);
-        assertThat(namedEntity.getTags()).doesNotContain(tagBack);
-
-        namedEntity.tags(new HashSet<>(Set.of(tagBack)));
-        assertThat(namedEntity.getTags()).containsOnly(tagBack);
-
-        namedEntity.setTags(new HashSet<>());
-        assertThat(namedEntity.getTags()).doesNotContain(tagBack);
-    }
-
-    @Test
     void articleTest() throws Exception {
         NamedEntity namedEntity = getNamedEntityRandomSampleGenerator();
         Article articleBack = getArticleRandomSampleGenerator();
 
-        namedEntity.addArticle(articleBack);
-        assertThat(namedEntity.getArticles()).containsOnly(articleBack);
-        assertThat(articleBack.getEntities()).containsOnly(namedEntity);
+        namedEntity.setArticle(articleBack);
+        assertThat(namedEntity.getArticle()).isEqualTo(articleBack);
 
-        namedEntity.removeArticle(articleBack);
-        assertThat(namedEntity.getArticles()).doesNotContain(articleBack);
-        assertThat(articleBack.getEntities()).doesNotContain(namedEntity);
+        namedEntity.article(null);
+        assertThat(namedEntity.getArticle()).isNull();
+    }
 
-        namedEntity.articles(new HashSet<>(Set.of(articleBack)));
-        assertThat(namedEntity.getArticles()).containsOnly(articleBack);
-        assertThat(articleBack.getEntities()).containsOnly(namedEntity);
+    @Test
+    void tagTest() throws Exception {
+        NamedEntity namedEntity = getNamedEntityRandomSampleGenerator();
+        Tag tagBack = getTagRandomSampleGenerator();
 
-        namedEntity.setArticles(new HashSet<>());
-        assertThat(namedEntity.getArticles()).doesNotContain(articleBack);
-        assertThat(articleBack.getEntities()).doesNotContain(namedEntity);
+        namedEntity.setTag(tagBack);
+        assertThat(namedEntity.getTag()).isEqualTo(tagBack);
+
+        namedEntity.tag(null);
+        assertThat(namedEntity.getTag()).isNull();
     }
 }

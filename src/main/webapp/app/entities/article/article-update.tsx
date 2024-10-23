@@ -25,7 +25,7 @@ export const ArticleUpdate = () => {
   const isNew = id === undefined;
 
   const namedEntities = useAppSelector(state => state.namedEntity.entities);
-  const nLPModels = useAppSelector(state => state.nLPModel.entities);
+  const nlpModels = useAppSelector(state => state.nLPModel.entities);
   const articleEntity = useAppSelector(state => state.article.entity);
   const loading = useAppSelector(state => state.article.loading);
   const updating = useAppSelector(state => state.article.updating);
@@ -44,7 +44,7 @@ export const ArticleUpdate = () => {
 
     dispatch(getNamedEntities({}));
     dispatch(getNLpModels({}));
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (updateSuccess) {
@@ -52,13 +52,14 @@ export const ArticleUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
   const saveEntity = values => {
+    // eslint-disable-next-line no-console
+    console.log(values)
     const entity = {
       ...articleEntity,
       ...values,
-      entities: mapIdList(values.entities),
-      model: nLPModels.find(it => it.id.toString() === values.model.toString()),
+      entities: mapIdList(values.namedEntities),
+      nlpModel: nlpModels.find(it => it.id.toString() === values.model.toString()),
     };
 
     if (isNew) {
@@ -70,19 +71,21 @@ export const ArticleUpdate = () => {
 
   const defaultValues = () =>
     isNew
-      ? {}
+      ? { text: '',  nlpModel: ''}
       : {
-          ...articleEntity,
-          entities: articleEntity?.entities?.map(e => e.id.toString()),
-          model: articleEntity?.model?.id,
-        };
+        ...articleEntity,
+        entities: articleEntity?.namedEntities?.map(e => e.id.toString()),
+        nlpModel: articleEntity?.nlpModel?.id,
+      };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="geneticsCollabApp.article.home.createOrEditLabel" data-cy="ArticleCreateUpdateHeading">
-            <Translate contentKey="geneticsCollabApp.article.home.createOrEditLabel">Create or edit a Article</Translate>
+            {isNew
+            ? (<Translate contentKey="geneticsCollabApp.article.home.createLabel">Create a Article</Translate>)
+            : (<Translate contentKey="geneticsCollabApp.article.home.editLabel">Edit a Article</Translate>)}
           </h2>
         </Col>
       </Row>
@@ -116,12 +119,13 @@ export const ArticleUpdate = () => {
                 id="article-model"
                 name="model"
                 data-cy="model"
-                label={translate('geneticsCollabApp.article.model')}
+                label={translate('geneticsCollabApp.article.nlpModel')}
                 type="select"
+                defaultValue={articleEntity?.nlpModel?.id || ''}
               >
                 <option value="" key="0" />
-                {nLPModels
-                  ? nLPModels.map(otherEntity => (
+                {nlpModels
+                  ? nlpModels.map(otherEntity => (
                     <option value={otherEntity.id} key={otherEntity.id}>
                       {otherEntity.name}
                     </option>
@@ -169,6 +173,9 @@ export const ArticleUpdate = () => {
               {/*  isImage*/}
               {/*  accept="image/*"*/}
               {/*/>*/}
+              {/*<FormText>*/}
+              {/*  <Translate contentKey="entity.validation.required">This field is required.</Translate>*/}
+              {/*</FormText>*/}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/article" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

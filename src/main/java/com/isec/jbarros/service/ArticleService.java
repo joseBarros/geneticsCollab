@@ -42,14 +42,6 @@ public interface ArticleService {
     Page<ArticleDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the articles with eager load of many-to-many relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<ArticleDTO> findAllWithEagerRelationships(Pageable pageable);
-
-    /**
      * Get the "id" article.
      *
      * @param id the id of the entity.

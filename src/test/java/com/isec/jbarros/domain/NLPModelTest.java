@@ -27,42 +27,46 @@ class NLPModelTest {
     }
 
     @Test
-    void articleTest() throws Exception {
-        NLPModel nLPModel = getNLPModelRandomSampleGenerator();
-        Article articleBack = getArticleRandomSampleGenerator();
-
-        nLPModel.addArticle(articleBack);
-        assertThat(nLPModel.getArticles()).containsOnly(articleBack);
-        assertThat(articleBack.getModel()).isEqualTo(nLPModel);
-
-        nLPModel.removeArticle(articleBack);
-        assertThat(nLPModel.getArticles()).doesNotContain(articleBack);
-        assertThat(articleBack.getModel()).isNull();
-
-        nLPModel.articles(new HashSet<>(Set.of(articleBack)));
-        assertThat(nLPModel.getArticles()).containsOnly(articleBack);
-        assertThat(articleBack.getModel()).isEqualTo(nLPModel);
-
-        nLPModel.setArticles(new HashSet<>());
-        assertThat(nLPModel.getArticles()).doesNotContain(articleBack);
-        assertThat(articleBack.getModel()).isNull();
-    }
-
-    @Test
     void tagsTest() throws Exception {
         NLPModel nLPModel = getNLPModelRandomSampleGenerator();
         Tag tagBack = getTagRandomSampleGenerator();
 
         nLPModel.addTags(tagBack);
         assertThat(nLPModel.getTags()).containsOnly(tagBack);
+        assertThat(tagBack.getNlpModel()).isEqualTo(nLPModel);
 
         nLPModel.removeTags(tagBack);
         assertThat(nLPModel.getTags()).doesNotContain(tagBack);
+        assertThat(tagBack.getNlpModel()).isNull();
 
         nLPModel.tags(new HashSet<>(Set.of(tagBack)));
         assertThat(nLPModel.getTags()).containsOnly(tagBack);
+        assertThat(tagBack.getNlpModel()).isEqualTo(nLPModel);
 
         nLPModel.setTags(new HashSet<>());
         assertThat(nLPModel.getTags()).doesNotContain(tagBack);
+        assertThat(tagBack.getNlpModel()).isNull();
+    }
+
+    @Test
+    void articlesTest() throws Exception {
+        NLPModel nLPModel = getNLPModelRandomSampleGenerator();
+        Article articleBack = getArticleRandomSampleGenerator();
+
+        nLPModel.addArticles(articleBack);
+        assertThat(nLPModel.getArticles()).containsOnly(articleBack);
+        assertThat(articleBack.getNlpModel()).isEqualTo(nLPModel);
+
+        nLPModel.removeArticles(articleBack);
+        assertThat(nLPModel.getArticles()).doesNotContain(articleBack);
+        assertThat(articleBack.getNlpModel()).isNull();
+
+        nLPModel.articles(new HashSet<>(Set.of(articleBack)));
+        assertThat(nLPModel.getArticles()).containsOnly(articleBack);
+        assertThat(articleBack.getNlpModel()).isEqualTo(nLPModel);
+
+        nLPModel.setArticles(new HashSet<>());
+        assertThat(nLPModel.getArticles()).doesNotContain(articleBack);
+        assertThat(articleBack.getNlpModel()).isNull();
     }
 }

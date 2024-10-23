@@ -8,8 +8,6 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { ITag } from 'app/shared/model/tag.model';
-import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { INLPModel } from 'app/shared/model/nlp-model.model';
 import { getEntity, updateEntity, createEntity, reset } from './nlp-model.reducer';
 
@@ -21,7 +19,6 @@ export const NLPModelUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const tags = useAppSelector(state => state.tag.entities);
   const nLPModelEntity = useAppSelector(state => state.nLPModel.entity);
   const loading = useAppSelector(state => state.nLPModel.loading);
   const updating = useAppSelector(state => state.nLPModel.updating);
@@ -37,8 +34,6 @@ export const NLPModelUpdate = () => {
     } else {
       dispatch(getEntity(id));
     }
-
-    dispatch(getTags({}));
   }, []);
 
   useEffect(() => {
@@ -52,7 +47,6 @@ export const NLPModelUpdate = () => {
     const entity = {
       ...nLPModelEntity,
       ...values,
-      tags: mapIdList(values.tags),
     };
 
     if (isNew) {
@@ -67,7 +61,6 @@ export const NLPModelUpdate = () => {
       ? {}
       : {
           ...nLPModelEntity,
-          tags: nLPModelEntity?.tags?.map(e => e.id.toString()),
         };
 
   return (
@@ -75,7 +68,9 @@ export const NLPModelUpdate = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="geneticsCollabApp.nLPModel.home.createOrEditLabel" data-cy="NLPModelCreateUpdateHeading">
-            <Translate contentKey="geneticsCollabApp.nLPModel.home.createOrEditLabel">Create or edit a NLPModel</Translate>
+            {isNew
+              ? (<Translate contentKey="geneticsCollabApp.nLPModel.home.createLabel">Create a NLP Model</Translate>)
+              : (<Translate contentKey="geneticsCollabApp.nLPModel.home.editLabel">Edit a NLP Model</Translate>)}
           </h2>
         </Col>
       </Row>
@@ -126,23 +121,6 @@ export const NLPModelUpdate = () => {
                 data-cy="notes"
                 type="text"
               />
-              {/*<ValidatedField
-                label={translate('geneticsCollabApp.nLPModel.tags')}
-                id="nlp-model-tags"
-                data-cy="tags"
-                type="select"
-                multiple
-                name="tags"
-              >
-                <option value="" key="0" />
-                {tags
-                  ? tags.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.label}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>*/}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/nlp-model" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

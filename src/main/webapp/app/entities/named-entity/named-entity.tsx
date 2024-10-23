@@ -126,6 +126,12 @@ export const NamedEntity = () => {
                   <Translate contentKey="geneticsCollabApp.namedEntity.endChar">End Char</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('endChar')} />
                 </th>
+                <th>
+                  <Translate contentKey="geneticsCollabApp.namedEntity.article">Article</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="geneticsCollabApp.namedEntity.tag">Tag</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -140,6 +146,8 @@ export const NamedEntity = () => {
                   <td>{namedEntity.text}</td>
                   <td>{namedEntity.startChar}</td>
                   <td>{namedEntity.endChar}</td>
+                  <td>{namedEntity.article ? <Link to={`/article/${namedEntity.article.id}`}>{namedEntity.article.title}</Link> : ''}</td>
+                  <td>{namedEntity.tag ? <Link to={`/tag/${namedEntity.tag.id}`}>{namedEntity.tag.label}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/named-entity/${namedEntity.id}`} color="info" size="sm" data-cy="entityDetailsButton">

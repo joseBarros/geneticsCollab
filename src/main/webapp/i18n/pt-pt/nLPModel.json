@@ -3,9 +3,10 @@
     "nLPModel": {
       "home": {
         "title": "NLP Models",
-        "refreshListLabel": "Refresh list",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo(a) NLP Model",
         "createOrEditLabel": "Criar ou editar NLP Model",
+        "editLabel": "Editar NLP Model",
         "notFound": "Nenhum NLP Models encontrado"
       },
       "created": "Um novo NLP Model foi criado com o identificador {{ param }}",
@@ -22,8 +23,8 @@
       "framework": "Framework",
       "path": "Path",
       "notes": "Notes",
-      "article": "Article",
-      "tags": "Tags"
+      "tags": "Tags",
+      "articles": "Articles"
     }
   }
 }

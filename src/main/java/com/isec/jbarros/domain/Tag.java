@@ -28,13 +28,13 @@ public class Tag implements Serializable {
 
     @DBRef
     @Field("namedEntities")
-    @JsonIgnoreProperties(value = { "tags", "articles" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "article", "tag" }, allowSetters = true)
     private Set<NamedEntity> namedEntities = new HashSet<>();
 
     @DBRef
-    @Field("nLPModels")
-    @JsonIgnoreProperties(value = { "articles", "tags" }, allowSetters = true)
-    private Set<NLPModel> nLPModels = new HashSet<>();
+    @Field("nlpModel")
+    @JsonIgnoreProperties(value = { "tags", "articles" }, allowSetters = true)
+    private NLPModel nlpModel;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -70,10 +70,10 @@ public class Tag implements Serializable {
 
     public void setNamedEntities(Set<NamedEntity> namedEntities) {
         if (this.namedEntities != null) {
-            this.namedEntities.forEach(i -> i.removeTags(this));
+            this.namedEntities.forEach(i -> i.setTag(null));
         }
         if (namedEntities != null) {
-            namedEntities.forEach(i -> i.addTags(this));
+            namedEntities.forEach(i -> i.setTag(this));
         }
         this.namedEntities = namedEntities;
     }
@@ -83,46 +83,28 @@ public class Tag implements Serializable {
         return this;
     }
 
-    public Tag addNamedEntity(NamedEntity namedEntity) {
+    public Tag addNamedEntities(NamedEntity namedEntity) {
         this.namedEntities.add(namedEntity);
-        namedEntity.getTags().add(this);
+        namedEntity.setTag(this);
         return this;
     }
 
-    public Tag removeNamedEntity(NamedEntity namedEntity) {
+    public Tag removeNamedEntities(NamedEntity namedEntity) {
         this.namedEntities.remove(namedEntity);
-        namedEntity.getTags().remove(this);
+        namedEntity.setTag(null);
         return this;
     }
 
-    public Set<NLPModel> getNLPModels() {
-        return this.nLPModels;
+    public NLPModel getNlpModel() {
+        return this.nlpModel;
     }
 
-    public void setNLPModels(Set<NLPModel> nLPModels) {
-        if (this.nLPModels != null) {
-            this.nLPModels.forEach(i -> i.removeTags(this));
-        }
-        if (nLPModels != null) {
-            nLPModels.forEach(i -> i.addTags(this));
-        }
-        this.nLPModels = nLPModels;
+    public void setNlpModel(NLPModel nLPModel) {
+        this.nlpModel = nLPModel;
     }
 
-    public Tag nLPModels(Set<NLPModel> nLPModels) {
-        this.setNLPModels(nLPModels);
-        return this;
-    }
-
-    public Tag addNLPModel(NLPModel nLPModel) {
-        this.nLPModels.add(nLPModel);
-        nLPModel.getTags().add(this);
-        return this;
-    }
-
-    public Tag removeNLPModel(NLPModel nLPModel) {
-        this.nLPModels.remove(nLPModel);
-        nLPModel.getTags().remove(this);
+    public Tag nlpModel(NLPModel nLPModel) {
+        this.setNlpModel(nLPModel);
         return this;
     }
 

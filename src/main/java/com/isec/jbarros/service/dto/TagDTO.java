@@ -15,6 +15,8 @@ public class TagDTO implements Serializable {
     @NotNull
     private String label;
 
+    private NLPModelDTO nlpModel;
+
     public String getId() {
         return id;
     }
@@ -29,6 +31,14 @@ public class TagDTO implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public NLPModelDTO getNlpModel() {
+        return nlpModel;
+    }
+
+    public void setNlpModel(NLPModelDTO nlpModel) {
+        this.nlpModel = nlpModel;
     }
 
     @Override
@@ -58,6 +68,7 @@ public class TagDTO implements Serializable {
         return "TagDTO{" +
             "id='" + getId() + "'" +
             ", label='" + getLabel() + "'" +
+            ", nlpModel=" + getNlpModel() +
             "}";
     }
 }

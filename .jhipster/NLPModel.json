@@ -26,18 +26,18 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityName": "article",
-      "otherEntityRelationshipName": "model",
-      "relationshipName": "article",
+      "otherEntityName": "tag",
+      "otherEntityRelationshipName": "nlpModel",
+      "relationshipName": "tags",
       "relationshipSide": "left",
       "relationshipType": "one-to-many"
     },
     {
-      "otherEntityField": "label",
-      "otherEntityName": "tag",
-      "relationshipName": "tags",
+      "otherEntityName": "article",
+      "otherEntityRelationshipName": "nlpModel",
+      "relationshipName": "articles",
       "relationshipSide": "left",
-      "relationshipType": "many-to-many"
+      "relationshipType": "one-to-many"
     }
   ],
   "searchEngine": "no",

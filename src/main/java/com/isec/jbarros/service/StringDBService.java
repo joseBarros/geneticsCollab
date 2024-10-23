@@ -133,29 +133,29 @@ public class StringDBService {
         String previousTag = null;
 
         for (NamedEntityDTO entity : namedEntities.stream()
-            .sorted(Comparator.comparingInt(e -> Integer.parseInt(e.getStartChar())))
-            .collect(Collectors.toList())) {
-            for (TagDTO tag : entity.getTags()) {
-                String label = tag.getLabel();
+            .sorted(Comparator.comparingInt(NamedEntityDTO::getStartChar))
+            .toList()) {
 
-                if (label.startsWith("B-")) {
-                    // If we encounter a new B- tag, save the current entity if it's not empty
-                    if (currentEntity.length() > 0) {
-                        result.add(currentEntity.toString());  // Add the concatenated entity to the result
-                        currentEntity.setLength(0);  // Clear the StringBuilder
-                    }
-                    // Start a new entity with the current NamedEntity's text
-                    currentEntity.append(entity.getText());
-                    previousTag = label;
-                } else if (label.startsWith("I-") && previousTag != null && previousTag.substring(2).equals(label.substring(2))) {
-                    // If the tag is I- and the previous tag is B- of the same type, concatenate the current text
-                    currentEntity.append(" ").append(entity.getText());
+            TagDTO tag = entity.getTag();
+            String label = tag.getLabel();
+
+            if (label.startsWith("B-")) {
+                // If we encounter a new B- tag, save the current entity if it's not empty
+                if (!currentEntity.isEmpty()) {
+                    result.add(currentEntity.toString());  // Add the concatenated entity to the result
+                    currentEntity.setLength(0);  // Clear the StringBuilder
                 }
+                // Start a new entity with the current NamedEntity's text
+                currentEntity.append(entity.getText());
+                previousTag = label;
+            } else if (label.startsWith("I-") && previousTag != null && previousTag.substring(2).equals(label.substring(2))) {
+                // If the tag is I- and the previous tag is B- of the same type, concatenate the current text
+                currentEntity.append(" ").append(entity.getText());
             }
         }
 
         // Add the last entity if there's one left in the buffer
-        if (currentEntity.length() > 0) {
+        if (!currentEntity.isEmpty()) {
             result.add(currentEntity.toString());
         }
 

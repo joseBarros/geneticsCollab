@@ -33,16 +33,16 @@ application {
 }
 
 entity Article {
-    title String required
-    summary String
+    title String required unique
     text String
     file AnyBlob
     interactionsImage ImageBlob
 }
+
 entity NamedEntity {
     text String required
-    startChar String
-    endChar String
+    startChar Integer
+    endChar Integer
 }
 
 entity Tag {
@@ -56,18 +56,13 @@ entity NLPModel {
     notes String
 }
 
-relationship ManyToMany {
-    Article{entities(text)} to NamedEntity
-    NamedEntity{tags(label)} to Tag
-    NLPModel{tags(label)} to Tag
-}
-
 relationship OneToMany {
-    NLPModel{article} to Article{model}
-    Tag{tag} to NamedEntity{entidade}
+    Article{namedEntities} to NamedEntity{article}
+    NLPModel{tags} to Tag{nlpModel}
+    Tag{namedEntities} to NamedEntity{tag}
+    NLPModel{articles} to Article{nlpModel}
 }
 
 dto Article, NamedEntity, Tag, NLPModel with mapstruct
 paginate Article, NamedEntity, Tag, NLPModel with pagination
 service Article, NamedEntity, Tag, NLPModel with serviceImpl
-

@@ -1,18 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import './HighlightEntity.css';
-
-interface INamedEntity {
-  id?: string;
-  text?: string;
-  startChar?: string | null;
-  endChar?: string | null;
-  tags?: ITag[] | null;
-}
-
-interface ITag {
-  id?: string;
-  label?: string;
-}
+import { INamedEntity } from 'app/shared/model/named-entity.model';
 
 interface HighlightEntityProps {
   text: string;
@@ -60,38 +48,37 @@ const HighlightEntity: React.FC<HighlightEntityProps> = ({ text, entities }) => 
     let lastIndex = 0;
     const highlightedText: React.ReactNode[] = [];
 
-    const sorted = [...entities].sort((a, b) => parseInt(a.startChar, 10) - parseInt(b.endChar, 10));
-
-    sorted?.forEach((entity, idx) => {
+    entities?.forEach((entity, idx) => {
       if (!entity.startChar || !entity.endChar) {
         console.warn(`Skipping entity ${idx} due to missing startChar or endChar`);
         return;
       }
 
-      const start = parseInt(entity.startChar, 10);
-      const end = parseInt(entity.endChar, 10);
-      // eslint-disable-next-line no-console
-      console.log(entity.text + " - " + start + "," + end)
+      const start = entity.startChar;
+      const end = entity.endChar;
+
+      if (lastIndex < start) {
+        highlightedText.push(text.slice(lastIndex, start));
+      }
 
       // Map over tags and normalize the label to handle IOB format
       //const tagLabels = entity.tags?.map(tag => normalizeTagLabel(tag?.label || "Unknown")).join(", ") || "No Tags";
-      const tagLabels = entity.tags?.map(tag => tag?.label || "Unknown").join(", ") || "No Tags";
+      const tagLabels = entity.tag ? entity.tag?.label : "No Tag";
       const entityColor = getEntityColor(tagLabels);
-
-      highlightedText.push(text.substring(lastIndex, start));
 
       // Push the highlighted entity with the tag(s) and color
       highlightedText.push(
         <span key={idx} className="highlight" style={{ backgroundColor: entityColor }}>
-          {entity.text} <strong className="tag">{tagLabels}</strong>
+          {text.slice(start, end)} <strong className="tag">{tagLabels}</strong>
         </span>
       );
 
-      //highlightedText.push(text.slice(end, start));
       lastIndex = end;
     });
 
-    highlightedText.push(text.substring(lastIndex, text.length));
+    if (lastIndex < text.length) {
+      highlightedText.push(text.slice(lastIndex));
+    }
 
     return highlightedText;
   };

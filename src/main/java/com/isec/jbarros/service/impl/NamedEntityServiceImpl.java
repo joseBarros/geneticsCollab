@@ -1,6 +1,8 @@
 package com.isec.jbarros.service.impl;
 
+import com.isec.jbarros.domain.Article;
 import com.isec.jbarros.domain.NamedEntity;
+import com.isec.jbarros.repository.ArticleRepository;
 import com.isec.jbarros.repository.NamedEntityRepository;
 import com.isec.jbarros.service.NamedEntityService;
 import com.isec.jbarros.service.dto.NamedEntityDTO;
@@ -22,10 +24,13 @@ public class NamedEntityServiceImpl implements NamedEntityService {
 
     private final NamedEntityRepository namedEntityRepository;
 
+    private final ArticleRepository articleRepository;
+
     private final NamedEntityMapper namedEntityMapper;
 
-    public NamedEntityServiceImpl(NamedEntityRepository namedEntityRepository, NamedEntityMapper namedEntityMapper) {
+    public NamedEntityServiceImpl(NamedEntityRepository namedEntityRepository, ArticleRepository articleRepository, NamedEntityMapper namedEntityMapper) {
         this.namedEntityRepository = namedEntityRepository;
+        this.articleRepository = articleRepository;
         this.namedEntityMapper = namedEntityMapper;
     }
 
@@ -34,6 +39,7 @@ public class NamedEntityServiceImpl implements NamedEntityService {
         log.debug("Request to save NamedEntity : {}", namedEntityDTO);
         NamedEntity namedEntity = namedEntityMapper.toEntity(namedEntityDTO);
         namedEntity = namedEntityRepository.save(namedEntity);
+        saveNamedEntityInArticle(namedEntity);
         return namedEntityMapper.toDto(namedEntity);
     }
 
@@ -42,6 +48,7 @@ public class NamedEntityServiceImpl implements NamedEntityService {
         log.debug("Request to update NamedEntity : {}", namedEntityDTO);
         NamedEntity namedEntity = namedEntityMapper.toEntity(namedEntityDTO);
         namedEntity = namedEntityRepository.save(namedEntity);
+        saveNamedEntityInArticle(namedEntity);
         return namedEntityMapper.toDto(namedEntity);
     }
 
@@ -66,19 +73,23 @@ public class NamedEntityServiceImpl implements NamedEntityService {
         return namedEntityRepository.findAll(pageable).map(namedEntityMapper::toDto);
     }
 
-    public Page<NamedEntityDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return namedEntityRepository.findAllWithEagerRelationships(pageable).map(namedEntityMapper::toDto);
-    }
-
     @Override
     public Optional<NamedEntityDTO> findOne(String id) {
         log.debug("Request to get NamedEntity : {}", id);
-        return namedEntityRepository.findOneWithEagerRelationships(id).map(namedEntityMapper::toDto);
+        return namedEntityRepository.findById(id).map(namedEntityMapper::toDto);
     }
 
     @Override
     public void delete(String id) {
         log.debug("Request to delete NamedEntity : {}", id);
         namedEntityRepository.deleteById(id);
+    }
+
+    private void saveNamedEntityInArticle(NamedEntity namedEntity) {
+        if(namedEntity.getArticle()!=null) {
+            Article article = namedEntity.getArticle();
+            article.getNamedEntities().add(namedEntity);
+            articleRepository.save(article);
+        }
     }
 }

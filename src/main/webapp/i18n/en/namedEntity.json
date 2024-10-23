@@ -6,6 +6,7 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Named Entity",
         "createOrEditLabel": "Create or edit a Named Entity",
+        "editLabel": "Edit a Named Entity",
         "notFound": "No Named Entities found"
       },
       "created": "A new Named Entity is created with identifier {{ param }}",
@@ -21,8 +22,8 @@
       "text": "Text",
       "startChar": "Start Char",
       "endChar": "End Char",
-      "tags": "Tags",
-      "article": "Article"
+      "article": "Article",
+      "tag": "Tag"
     }
   }
 }

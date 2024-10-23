@@ -50,18 +50,13 @@ export const NamedEntityDetail = () => {
           </dt>
           <dd>{namedEntityEntity.endChar}</dd>
           <dt>
-            <Translate contentKey="geneticsCollabApp.namedEntity.tags">Tags</Translate>
+            <Translate contentKey="geneticsCollabApp.namedEntity.article">Article</Translate>
           </dt>
-          <dd>
-            {namedEntityEntity.tags
-              ? namedEntityEntity.tags.map((val, i) => (
-                  <span key={val.id}>
-                    <a>{val.label}</a>
-                    {namedEntityEntity.tags && i === namedEntityEntity.tags.length - 1 ? '' : ', '}
-                  </span>
-                ))
-              : null}
-          </dd>
+          <dd>{namedEntityEntity.article ? namedEntityEntity.article.id : ''}</dd>
+          <dt>
+            <Translate contentKey="geneticsCollabApp.namedEntity.tag">Tag</Translate>
+          </dt>
+          <dd>{namedEntityEntity.tag ? namedEntityEntity.tag.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/named-entity" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

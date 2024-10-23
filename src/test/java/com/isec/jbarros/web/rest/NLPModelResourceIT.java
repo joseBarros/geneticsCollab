@@ -2,28 +2,20 @@ package com.isec.jbarros.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.isec.jbarros.IntegrationTest;
 import com.isec.jbarros.domain.NLPModel;
 import com.isec.jbarros.repository.NLPModelRepository;
-import com.isec.jbarros.service.NLPModelService;
 import com.isec.jbarros.service.dto.NLPModelDTO;
 import com.isec.jbarros.service.mapper.NLPModelMapper;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
  * Integration tests for the {@link NLPModelResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class NLPModelResourceIT {
@@ -55,14 +46,8 @@ class NLPModelResourceIT {
     @Autowired
     private NLPModelRepository nLPModelRepository;
 
-    @Mock
-    private NLPModelRepository nLPModelRepositoryMock;
-
     @Autowired
     private NLPModelMapper nLPModelMapper;
-
-    @Mock
-    private NLPModelService nLPModelServiceMock;
 
     @Autowired
     private MockMvc restNLPModelMockMvc;
@@ -166,23 +151,6 @@ class NLPModelResourceIT {
             .andExpect(jsonPath("$.[*].framework").value(hasItem(DEFAULT_FRAMEWORK)))
             .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllNLPModelsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(nLPModelServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restNLPModelMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(nLPModelServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllNLPModelsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(nLPModelServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restNLPModelMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(nLPModelRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -311,7 +279,7 @@ class NLPModelResourceIT {
         NLPModel partialUpdatedNLPModel = new NLPModel();
         partialUpdatedNLPModel.setId(nLPModel.getId());
 
-        partialUpdatedNLPModel.name(UPDATED_NAME).notes(UPDATED_NOTES);
+        partialUpdatedNLPModel.framework(UPDATED_FRAMEWORK);
 
         restNLPModelMockMvc
             .perform(
@@ -325,10 +293,10 @@ class NLPModelResourceIT {
         List<NLPModel> nLPModelList = nLPModelRepository.findAll();
         assertThat(nLPModelList).hasSize(databaseSizeBeforeUpdate);
         NLPModel testNLPModel = nLPModelList.get(nLPModelList.size() - 1);
-        assertThat(testNLPModel.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testNLPModel.getFramework()).isEqualTo(DEFAULT_FRAMEWORK);
+        assertThat(testNLPModel.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testNLPModel.getFramework()).isEqualTo(UPDATED_FRAMEWORK);
         assertThat(testNLPModel.getPath()).isEqualTo(DEFAULT_PATH);
-        assertThat(testNLPModel.getNotes()).isEqualTo(UPDATED_NOTES);
+        assertThat(testNLPModel.getNotes()).isEqualTo(DEFAULT_NOTES);
     }
 
     @Test

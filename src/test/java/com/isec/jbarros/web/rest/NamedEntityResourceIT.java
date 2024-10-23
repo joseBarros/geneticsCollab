@@ -2,28 +2,20 @@ package com.isec.jbarros.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.isec.jbarros.IntegrationTest;
 import com.isec.jbarros.domain.NamedEntity;
 import com.isec.jbarros.repository.NamedEntityRepository;
-import com.isec.jbarros.service.NamedEntityService;
 import com.isec.jbarros.service.dto.NamedEntityDTO;
 import com.isec.jbarros.service.mapper.NamedEntityMapper;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
  * Integration tests for the {@link NamedEntityResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class NamedEntityResourceIT {
@@ -40,11 +31,11 @@ class NamedEntityResourceIT {
     private static final String DEFAULT_TEXT = "AAAAAAAAAA";
     private static final String UPDATED_TEXT = "BBBBBBBBBB";
 
-    private static final String DEFAULT_START_CHAR = "AAAAAAAAAA";
-    private static final String UPDATED_START_CHAR = "BBBBBBBBBB";
+    private static final Integer DEFAULT_START_CHAR = 1;
+    private static final Integer UPDATED_START_CHAR = 2;
 
-    private static final String DEFAULT_END_CHAR = "AAAAAAAAAA";
-    private static final String UPDATED_END_CHAR = "BBBBBBBBBB";
+    private static final Integer DEFAULT_END_CHAR = 1;
+    private static final Integer UPDATED_END_CHAR = 2;
 
     private static final String ENTITY_API_URL = "/api/named-entities";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -52,14 +43,8 @@ class NamedEntityResourceIT {
     @Autowired
     private NamedEntityRepository namedEntityRepository;
 
-    @Mock
-    private NamedEntityRepository namedEntityRepositoryMock;
-
     @Autowired
     private NamedEntityMapper namedEntityMapper;
-
-    @Mock
-    private NamedEntityService namedEntityServiceMock;
 
     @Autowired
     private MockMvc restNamedEntityMockMvc;
@@ -167,23 +152,6 @@ class NamedEntityResourceIT {
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT)))
             .andExpect(jsonPath("$.[*].startChar").value(hasItem(DEFAULT_START_CHAR)))
             .andExpect(jsonPath("$.[*].endChar").value(hasItem(DEFAULT_END_CHAR)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllNamedEntitiesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(namedEntityServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restNamedEntityMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(namedEntityServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllNamedEntitiesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(namedEntityServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restNamedEntityMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(namedEntityRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

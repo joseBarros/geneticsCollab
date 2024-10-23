@@ -3,9 +3,10 @@
     "namedEntity": {
       "home": {
         "title": "Named Entities",
-        "refreshListLabel": "Refresh list",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo(a) Named Entity",
         "createOrEditLabel": "Criar ou editar Named Entity",
+        "editLabel": "Editar Named Entity",
         "notFound": "Nenhum Named Entities encontrado"
       },
       "created": "Um novo Named Entity foi criado com o identificador {{ param }}",
@@ -21,8 +22,8 @@
       "text": "Text",
       "startChar": "Start Char",
       "endChar": "End Char",
-      "tags": "Tags",
-      "article": "Article"
+      "article": "Article",
+      "tag": "Tag"
     }
   }
 }

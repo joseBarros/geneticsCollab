@@ -131,7 +131,7 @@ export const Article = () => {
                   <FontAwesomeIcon icon={getSortIconByFieldName('interactionsImage')} />
                 </th>
                 <th>
-                  <Translate contentKey="geneticsCollabApp.article.model">Model</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="geneticsCollabApp.article.nlpModel">Nlp Model</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -145,11 +145,11 @@ export const Article = () => {
                     </Button>
                   </td>
                   <td>{article.title}</td>
-                  <td>{article != null && article.text.length > 100 ? article.text.substring(0, 99) + '...' : article.text}</td>
+                  <td>{article.text.length > 100 ? article.text.substring(0, 99) + '...' : article.text}</td>
                   <td>
                     {article.file ? (
                       <div>
-                      {article.fileContentType ? (
+                        {article.fileContentType ? (
                           <a onClick={openFile(article.fileContentType, article.file)}>
                             <Translate contentKey="entity.action.open">Open File</Translate>
                             &nbsp;
@@ -170,16 +170,16 @@ export const Article = () => {
                               src={`data:${article.interactionsImageContentType};base64,${article.interactionsImage}`}
                               style={{ maxHeight: '30px' }}
                             />
-                            &nbsp;
+                            {/*&nbsp;*/}
                           </a>
                         ) : null}
-                        <span>
-                          {article.interactionsImageContentType}, {byteSize(article.interactionsImage)}
-                        </span>
+                        {/*<span>*/}
+                        {/*  {article.interactionsImageContentType}, {byteSize(article.interactionsImage)}*/}
+                        {/*</span>*/}
                       </div>
                     ) : null}
                   </td>
-                  <td>{article.model ? <Link to={`/nlp-model/${article.model.id}`}>{article.model.name}</Link> : ''}</td>
+                  <td>{article.nlpModel ? <Link to={`/nlp-model/${article.nlpModel.id}`}>{article.nlpModel.name}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/article/${article.id}`} color="info" size="sm" data-cy="entityDetailsButton">

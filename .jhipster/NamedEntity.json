@@ -11,22 +11,29 @@
     },
     {
       "fieldName": "startChar",
-      "fieldType": "String"
+      "fieldType": "Integer"
     },
     {
       "fieldName": "endChar",
-      "fieldType": "String"
+      "fieldType": "Integer"
     }
   ],
   "name": "NamedEntity",
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "label",
+      "otherEntityName": "article",
+      "otherEntityRelationshipName": "namedEntities",
+      "relationshipName": "article",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
       "otherEntityName": "tag",
-      "relationshipName": "tags",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-many"
+      "otherEntityRelationshipName": "namedEntities",
+      "relationshipName": "tag",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
     }
   ],
   "searchEngine": "no",

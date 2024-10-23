@@ -8,10 +8,10 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { ITag } from 'app/shared/model/tag.model';
-import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { IArticle } from 'app/shared/model/article.model';
 import { getEntities as getArticles } from 'app/entities/article/article.reducer';
+import { ITag } from 'app/shared/model/tag.model';
+import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { INamedEntity } from 'app/shared/model/named-entity.model';
 import { getEntity, updateEntity, createEntity, reset } from './named-entity.reducer';
 
@@ -23,8 +23,8 @@ export const NamedEntityUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const tags = useAppSelector(state => state.tag.entities);
   const articles = useAppSelector(state => state.article.entities);
+  const tags = useAppSelector(state => state.tag.entities);
   const namedEntityEntity = useAppSelector(state => state.namedEntity.entity);
   const loading = useAppSelector(state => state.namedEntity.loading);
   const updating = useAppSelector(state => state.namedEntity.updating);
@@ -41,8 +41,8 @@ export const NamedEntityUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getTags({}));
     dispatch(getArticles({}));
+    dispatch(getTags({}));
   }, []);
 
   useEffect(() => {
@@ -53,10 +53,18 @@ export const NamedEntityUpdate = () => {
 
   // eslint-disable-next-line complexity
   const saveEntity = values => {
+    if (values.startChar !== undefined && typeof values.startChar !== 'number') {
+      values.startChar = Number(values.startChar);
+    }
+    if (values.endChar !== undefined && typeof values.endChar !== 'number') {
+      values.endChar = Number(values.endChar);
+    }
+
     const entity = {
       ...namedEntityEntity,
       ...values,
-      tags: mapIdList(values.tags),
+      article: articles.find(it => it.id.toString() === values.article.toString()),
+      tag: tags.find(it => it.id.toString() === values.tag.toString()),
     };
 
     if (isNew) {
@@ -71,7 +79,8 @@ export const NamedEntityUpdate = () => {
       ? {}
       : {
           ...namedEntityEntity,
-          tags: namedEntityEntity?.tags?.map(e => e.id.toString()),
+          article: namedEntityEntity?.article?.id,
+          tag: namedEntityEntity?.tag?.id,
         };
 
   return (
@@ -79,7 +88,9 @@ export const NamedEntityUpdate = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="geneticsCollabApp.namedEntity.home.createOrEditLabel" data-cy="NamedEntityCreateUpdateHeading">
-            <Translate contentKey="geneticsCollabApp.namedEntity.home.createOrEditLabel">Create or edit a NamedEntity</Translate>
+            {isNew
+              ? (<Translate contentKey="geneticsCollabApp.namedEntity.home.createLabel">Create a NamedEntity</Translate>)
+              : (<Translate contentKey="geneticsCollabApp.namedEntity.home.editLabel">Edit a NamedEntity</Translate>)}
           </h2>
         </Col>
       </Row>
@@ -124,18 +135,33 @@ export const NamedEntityUpdate = () => {
                 type="text"
               />
               <ValidatedField
-                label={translate('geneticsCollabApp.namedEntity.tags')}
-                id="named-entity-tags"
-                data-cy="tags"
+                id="named-entity-article"
+                name="article"
+                data-cy="article"
+                label={translate('geneticsCollabApp.namedEntity.article')}
                 type="select"
-                multiple
-                name="tags"
+              >
+                <option value="" key="0" />
+                {articles
+                  ? articles.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField
+                id="named-entity-tag"
+                name="tag"
+                data-cy="tag"
+                label={translate('geneticsCollabApp.namedEntity.tag')}
+                type="select"
               >
                 <option value="" key="0" />
                 {tags
                   ? tags.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.label}
+                        {otherEntity.id}
                       </option>
                     ))
                   : null}

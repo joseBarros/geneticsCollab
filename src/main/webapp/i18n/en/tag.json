@@ -6,6 +6,7 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Tag",
         "createOrEditLabel": "Create or edit a Tag",
+        "editLabel": "Edit a Tag",
         "notFound": "No Tags found"
       },
       "created": "A new Tag is created with identifier {{ param }}",
@@ -19,9 +20,8 @@
       },
       "id": "ID",
       "label": "Label",
-      "color": "Color",
-      "namedEntity": "Named Entity",
-      "nLPModel": "N LP Model"
+      "namedEntities": "Named Entities",
+      "nlpModel": "Nlp Model"
     }
   }
 }

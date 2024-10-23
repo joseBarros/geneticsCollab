@@ -42,14 +42,6 @@ public interface NLPModelService {
     Page<NLPModelDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the nLPModels with eager load of many-to-many relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<NLPModelDTO> findAllWithEagerRelationships(Pageable pageable);
-
-    /**
      * Get the "id" nLPModel.
      *
      * @param id the id of the entity.

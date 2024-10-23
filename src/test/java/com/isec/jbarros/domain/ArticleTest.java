@@ -27,32 +27,36 @@ class ArticleTest {
     }
 
     @Test
-    void entitiesTest() throws Exception {
+    void namedEntitiesTest() throws Exception {
         Article article = getArticleRandomSampleGenerator();
         NamedEntity namedEntityBack = getNamedEntityRandomSampleGenerator();
 
-        article.addEntities(namedEntityBack);
-        assertThat(article.getEntities()).containsOnly(namedEntityBack);
+        article.addNamedEntities(namedEntityBack);
+        assertThat(article.getNamedEntities()).containsOnly(namedEntityBack);
+        assertThat(namedEntityBack.getArticle()).isEqualTo(article);
 
-        article.removeEntities(namedEntityBack);
-        assertThat(article.getEntities()).doesNotContain(namedEntityBack);
+        article.removeNamedEntities(namedEntityBack);
+        assertThat(article.getNamedEntities()).doesNotContain(namedEntityBack);
+        assertThat(namedEntityBack.getArticle()).isNull();
 
-        article.entities(new HashSet<>(Set.of(namedEntityBack)));
-        assertThat(article.getEntities()).containsOnly(namedEntityBack);
+        article.namedEntities(new HashSet<>(Set.of(namedEntityBack)));
+        assertThat(article.getNamedEntities()).containsOnly(namedEntityBack);
+        assertThat(namedEntityBack.getArticle()).isEqualTo(article);
 
-        article.setEntities(new HashSet<>());
-        assertThat(article.getEntities()).doesNotContain(namedEntityBack);
+        article.setNamedEntities(new HashSet<>());
+        assertThat(article.getNamedEntities()).doesNotContain(namedEntityBack);
+        assertThat(namedEntityBack.getArticle()).isNull();
     }
 
     @Test
-    void modelTest() throws Exception {
+    void nlpModelTest() throws Exception {
         Article article = getArticleRandomSampleGenerator();
         NLPModel nLPModelBack = getNLPModelRandomSampleGenerator();
 
-        article.setModel(nLPModelBack);
-        assertThat(article.getModel()).isEqualTo(nLPModelBack);
+        article.setNlpModel(nLPModelBack);
+        assertThat(article.getNlpModel()).isEqualTo(nLPModelBack);
 
-        article.model(null);
-        assertThat(article.getModel()).isNull();
+        article.nlpModel(null);
+        assertThat(article.getNlpModel()).isNull();
     }
 }

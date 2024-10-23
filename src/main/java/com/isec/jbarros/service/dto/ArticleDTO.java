@@ -1,5 +1,6 @@
 package com.isec.jbarros.service.dto;
 
+import com.isec.jbarros.domain.NamedEntity;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -25,9 +26,17 @@ public class ArticleDTO implements Serializable {
     private byte[] interactionsImage;
 
     private String interactionsImageContentType;
-    private Set<NamedEntityDTO> entities = new HashSet<>();
+    private NLPModelDTO nlpModel;
 
-    private NLPModelDTO model;
+    private Set<NamedEntityDTO> namedEntities = new HashSet<>();
+
+    public Set<NamedEntityDTO> getNamedEntities() {
+        return namedEntities;
+    }
+
+    public void setNamedEntities(Set<NamedEntityDTO> namedEntities) {
+        this.namedEntities = namedEntities;
+    }
 
     public String getId() {
         return id;
@@ -85,20 +94,12 @@ public class ArticleDTO implements Serializable {
         this.interactionsImageContentType = interactionsImageContentType;
     }
 
-    public Set<NamedEntityDTO> getEntities() {
-        return entities;
+    public NLPModelDTO getNlpModel() {
+        return nlpModel;
     }
 
-    public void setEntities(Set<NamedEntityDTO> entities) {
-        this.entities = entities;
-    }
-
-    public NLPModelDTO getModel() {
-        return model;
-    }
-
-    public void setModel(NLPModelDTO model) {
-        this.model = model;
+    public void setNlpModel(NLPModelDTO nlpModel) {
+        this.nlpModel = nlpModel;
     }
 
     @Override
@@ -131,8 +132,8 @@ public class ArticleDTO implements Serializable {
             ", text='" + getText() + "'" +
             ", file='" + getFile() + "'" +
             ", interactionsImage='" + getInteractionsImage() + "'" +
-            ", entities=" + getEntities() +
-            ", model=" + getModel() +
+            ", entities=" + getNamedEntities() +
+            ", model=" + getNlpModel() +
             "}";
     }
 }

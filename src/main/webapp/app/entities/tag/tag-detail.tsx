@@ -38,11 +38,9 @@ export const TagDetail = () => {
           </dt>
           <dd>{tagEntity.label}</dd>
           <dt>
-            <span id="color">
-              <Translate contentKey="geneticsCollabApp.tag.color">Color</Translate>
-            </span>
+            <Translate contentKey="geneticsCollabApp.tag.nlpModel">Nlp Model</Translate>
           </dt>
-          <dd>{tagEntity.color}</dd>
+          <dd>{tagEntity.nlpModel ? tagEntity.nlpModel.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/tag" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

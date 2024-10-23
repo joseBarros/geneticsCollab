@@ -28,16 +28,16 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "text",
       "otherEntityName": "namedEntity",
-      "relationshipName": "entities",
+      "otherEntityRelationshipName": "article",
+      "relationshipName": "namedEntities",
       "relationshipSide": "left",
-      "relationshipType": "many-to-many"
+      "relationshipType": "one-to-many"
     },
     {
       "otherEntityName": "nLPModel",
-      "otherEntityRelationshipName": "article",
-      "relationshipName": "model",
+      "otherEntityRelationshipName": "articles",
+      "relationshipName": "nlpModel",
       "relationshipSide": "right",
       "relationshipType": "many-to-one"
     }

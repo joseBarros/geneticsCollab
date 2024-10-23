@@ -2,9 +2,13 @@ package com.isec.jbarros.service.impl;
 
 import com.isec.jbarros.domain.Article;
 import com.isec.jbarros.repository.ArticleRepository;
+import com.isec.jbarros.repository.NamedEntityRepository;
+import com.isec.jbarros.repository.TagRepository;
 import com.isec.jbarros.service.ArticleService;
 import com.isec.jbarros.service.dto.ArticleDTO;
 import com.isec.jbarros.service.mapper.ArticleMapper;
+
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +26,16 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
 
+    private final NamedEntityRepository namedEntityRepository;
+
+    private final TagRepository tagRepository;
+
     private final ArticleMapper articleMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, ArticleMapper articleMapper) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, NamedEntityRepository namedEntityRepository, TagRepository tagRepository, ArticleMapper articleMapper) {
         this.articleRepository = articleRepository;
+        this.namedEntityRepository = namedEntityRepository;
+        this.tagRepository = tagRepository;
         this.articleMapper = articleMapper;
     }
 
@@ -66,18 +76,16 @@ public class ArticleServiceImpl implements ArticleService {
         return articleRepository.findAll(pageable).map(articleMapper::toDto);
     }
 
-    public Page<ArticleDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return articleRepository.findAllWithEagerRelationships(pageable).map(articleMapper::toDto);
-    }
-
     @Override
     public Optional<ArticleDTO> findOne(String id) {
         log.debug("Request to get Article : {}", id);
-        return articleRepository.findOneWithEagerRelationships(id).map(articleMapper::toDto);
+        return articleRepository.findById(id).map(articleMapper::toDto);
     }
 
     @Override
     public void delete(String id) {
+        log.debug("Delete Named entities for Article : {}", id);
+        Objects.requireNonNull(articleRepository.findById(id).orElse(null)).getNamedEntities().forEach(namedEntity -> {namedEntityRepository.deleteById(namedEntity.getId());});
         log.debug("Request to delete Article : {}", id);
         articleRepository.deleteById(id);
     }

@@ -1,29 +1,30 @@
 {
   "geneticsCollabApp": {
-    "article": {
+    "Artigo": {
       "home": {
-        "title": "Articles",
-        "refreshListLabel": "Refresh list",
-        "createLabel": "Criar novo(a) Article",
-        "createOrEditLabel": "Criar ou editar Article",
-        "notFound": "Nenhum Articles encontrado"
+        "title": "Artigos",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo(a) Artigo",
+        "createOrEditLabel": "Criar ou editar Artigo",
+        "editLabel": "Editar Artigo",
+        "notFound": "Nenhum Artigo encontrados"
       },
-      "created": "Um novo Article foi criado com o identificador {{ param }}",
-      "updated": "Article com identificador {{ param }} foi actualizado",
-      "deleted": "Article com identificador {{ param }} foi eliminado",
+      "created": "Um novo Artigo foi criado com o identificador {{ param }}",
+      "updated": "Artigo com identificador {{ param }} foi actualizado",
+      "deleted": "Artigo com identificador {{ param }} foi eliminado",
       "delete": {
-        "question": "Tem a certeza que pretende eliminar o(a) Article {{ id }}?"
+        "question": "Tem a certeza que pretende eliminar o(a) Artigo {{ id }}?"
       },
       "detail": {
-        "title": "Article"
+        "title": "Artigo"
       },
       "id": "ID",
       "title": "Title",
       "text": "Text",
       "file": "File",
       "interactionsImage": "Interactions Image",
-      "entities": "Entities",
-      "model": "Model"
+      "namedEntities": "Named Entities",
+      "nlpModel": "Nlp Model"
     }
   }
 }

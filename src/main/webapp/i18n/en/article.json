@@ -6,6 +6,7 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Article",
         "createOrEditLabel": "Create or edit a Article",
+        "editLabel": "Edit a Article",
         "notFound": "No Articles found"
       },
       "created": "A new Article is created with identifier {{ param }}",
@@ -22,8 +23,8 @@
       "text": "Text",
       "file": "File",
       "interactionsImage": "Interactions Image",
-      "entities": "Entities",
-      "model": "Model"
+      "namedEntities": "Named Entities",
+      "nlpModel": "NLP Model"
     }
   }
 }

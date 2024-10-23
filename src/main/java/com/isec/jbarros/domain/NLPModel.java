@@ -36,14 +36,14 @@ public class NLPModel implements Serializable {
     private String notes;
 
     @DBRef
-    @Field("article")
-    @JsonIgnoreProperties(value = { "entities", "model" }, allowSetters = true)
-    private Set<Article> articles = new HashSet<>();
+    @Field("tags")
+    @JsonIgnoreProperties(value = { "namedEntities", "nlpModel" }, allowSetters = true)
+    private Set<Tag> tags = new HashSet<>();
 
     @DBRef
-    @Field("tags")
-    @JsonIgnoreProperties(value = { "namedEntities", "nLPModels" }, allowSetters = true)
-    private Set<Tag> tags = new HashSet<>();
+    @Field("articles")
+    @JsonIgnoreProperties(value = { "namedEntities", "nlpModel" }, allowSetters = true)
+    private Set<Article> articles = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -112,42 +112,17 @@ public class NLPModel implements Serializable {
         this.notes = notes;
     }
 
-    public Set<Article> getArticles() {
-        return this.articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        if (this.articles != null) {
-            this.articles.forEach(i -> i.setModel(null));
-        }
-        if (articles != null) {
-            articles.forEach(i -> i.setModel(this));
-        }
-        this.articles = articles;
-    }
-
-    public NLPModel articles(Set<Article> articles) {
-        this.setArticles(articles);
-        return this;
-    }
-
-    public NLPModel addArticle(Article article) {
-        this.articles.add(article);
-        article.setModel(this);
-        return this;
-    }
-
-    public NLPModel removeArticle(Article article) {
-        this.articles.remove(article);
-        article.setModel(null);
-        return this;
-    }
-
     public Set<Tag> getTags() {
         return this.tags;
     }
 
     public void setTags(Set<Tag> tags) {
+        if (this.tags != null) {
+            this.tags.forEach(i -> i.setNlpModel(null));
+        }
+        if (tags != null) {
+            tags.forEach(i -> i.setNlpModel(this));
+        }
         this.tags = tags;
     }
 
@@ -158,11 +133,44 @@ public class NLPModel implements Serializable {
 
     public NLPModel addTags(Tag tag) {
         this.tags.add(tag);
+        tag.setNlpModel(this);
         return this;
     }
 
     public NLPModel removeTags(Tag tag) {
         this.tags.remove(tag);
+        tag.setNlpModel(null);
+        return this;
+    }
+
+    public Set<Article> getArticles() {
+        return this.articles;
+    }
+
+    public void setArticles(Set<Article> articles) {
+        if (this.articles != null) {
+            this.articles.forEach(i -> i.setNlpModel(null));
+        }
+        if (articles != null) {
+            articles.forEach(i -> i.setNlpModel(this));
+        }
+        this.articles = articles;
+    }
+
+    public NLPModel articles(Set<Article> articles) {
+        this.setArticles(articles);
+        return this;
+    }
+
+    public NLPModel addArticles(Article article) {
+        this.articles.add(article);
+        article.setNlpModel(this);
+        return this;
+    }
+
+    public NLPModel removeArticles(Article article) {
+        this.articles.remove(article);
+        article.setNlpModel(null);
         return this;
     }
 

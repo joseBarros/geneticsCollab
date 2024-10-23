@@ -3,8 +3,6 @@ package com.isec.jbarros.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,20 +25,20 @@ public class NamedEntity implements Serializable {
     private String text;
 
     @Field("start_char")
-    private String startChar;
+    private Integer startChar;
 
     @Field("end_char")
-    private String endChar;
+    private Integer endChar;
 
     @DBRef
-    @Field("tags")
-    @JsonIgnoreProperties(value = { "namedEntities", "nLPModels" }, allowSetters = true)
-    private Set<Tag> tags = new HashSet<>();
+    @Field("article")
+    @JsonIgnoreProperties(value = { "namedEntities", "nlpModel" }, allowSetters = true)
+    private Article article;
 
     @DBRef
-    @Field("articles")
-    @JsonIgnoreProperties(value = { "entities", "model" }, allowSetters = true)
-    private Set<Article> articles = new HashSet<>();
+    @Field("tag")
+    @JsonIgnoreProperties(value = { "namedEntities", "nlpModel" }, allowSetters = true)
+    private Tag tag;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -70,83 +68,55 @@ public class NamedEntity implements Serializable {
         this.text = text;
     }
 
-    public String getStartChar() {
+    public Integer getStartChar() {
         return this.startChar;
     }
 
-    public NamedEntity startChar(String startChar) {
+    public NamedEntity startChar(Integer startChar) {
         this.setStartChar(startChar);
         return this;
     }
 
-    public void setStartChar(String startChar) {
+    public void setStartChar(Integer startChar) {
         this.startChar = startChar;
     }
 
-    public String getEndChar() {
+    public Integer getEndChar() {
         return this.endChar;
     }
 
-    public NamedEntity endChar(String endChar) {
+    public NamedEntity endChar(Integer endChar) {
         this.setEndChar(endChar);
         return this;
     }
 
-    public void setEndChar(String endChar) {
+    public void setEndChar(Integer endChar) {
         this.endChar = endChar;
     }
 
-    public Set<Tag> getTags() {
-        return this.tags;
+    public Article getArticle() {
+        return this.article;
     }
 
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
+    public void setArticle(Article article) {
+        this.article = article;
     }
 
-    public NamedEntity tags(Set<Tag> tags) {
-        this.setTags(tags);
+    public NamedEntity article(Article article) {
+        this.setArticle(article);
         return this;
     }
 
-    public NamedEntity addTags(Tag tag) {
-        this.tags.add(tag);
-        return this;
+    public Tag getTag() {
+        return this.tag;
     }
 
-    public NamedEntity removeTags(Tag tag) {
-        this.tags.remove(tag);
-        return this;
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 
-    public Set<Article> getArticles() {
-        return this.articles;
-    }
-
-    public void setArticles(Set<Article> articles) {
-        if (this.articles != null) {
-            this.articles.forEach(i -> i.removeEntities(this));
-        }
-        if (articles != null) {
-            articles.forEach(i -> i.addEntities(this));
-        }
-        this.articles = articles;
-    }
-
-    public NamedEntity articles(Set<Article> articles) {
-        this.setArticles(articles);
-        return this;
-    }
-
-    public NamedEntity addArticle(Article article) {
-        this.articles.add(article);
-        article.getEntities().add(this);
-        return this;
-    }
-
-    public NamedEntity removeArticle(Article article) {
-        this.articles.remove(article);
-        article.getEntities().remove(this);
+    public NamedEntity tag(Tag tag) {
+        this.setTag(tag);
         return this;
     }
 
@@ -175,8 +145,8 @@ public class NamedEntity implements Serializable {
         return "NamedEntity{" +
             "id=" + getId() +
             ", text='" + getText() + "'" +
-            ", startChar='" + getStartChar() + "'" +
-            ", endChar='" + getEndChar() + "'" +
+            ", startChar=" + getStartChar() +
+            ", endChar=" + getEndChar() +
             "}";
     }
 }

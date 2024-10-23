@@ -8,15 +8,26 @@
       "fieldName": "label",
       "fieldType": "String",
       "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "color",
-      "fieldType": "String"
     }
   ],
   "name": "Tag",
   "pagination": "pagination",
-  "relationships": [],
+  "relationships": [
+    {
+      "otherEntityName": "namedEntity",
+      "otherEntityRelationshipName": "tag",
+      "relationshipName": "namedEntities",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "nLPModel",
+      "otherEntityRelationshipName": "tags",
+      "relationshipName": "nlpModel",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
   "searchEngine": "no",
   "service": "serviceImpl"
 }

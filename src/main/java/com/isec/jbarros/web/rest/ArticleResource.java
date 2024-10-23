@@ -95,6 +95,8 @@ public class ArticleResource {
     }
 
     private void callStringIfProteinEntities(Map<String, Object> stringObjectMap, ArticleDTO result) {
+        if(stringObjectMap == null)
+            return;
         Object entities = stringObjectMap.get("entities");
 
         // Assuming entities is a list or a map, you can cast and loop through it
@@ -111,8 +113,8 @@ public class ArticleResource {
 
     private Map<String, Object> extractEntities(ArticleDTO result) {
         //Call NLP service responsible for NER
-        if(result.getText()!=null && !result.getText().isEmpty() && result.getModel() != null && result.getModel().getId()!=null){
-            return nlpService.processText(result.getId(), result.getText(), result.getModel().getId());
+        if(result.getText()!=null && !result.getText().isEmpty() && result.getNlpModel() != null && result.getNlpModel().getId()!=null){
+            return nlpService.processText(result.getId(), result.getText(), result.getNlpModel().getId());
         }
         return null;
     }
@@ -181,7 +183,7 @@ public class ArticleResource {
             try {
                 ArticleDTO articleDTOtobeUpdated = articleService.findOne(articleDTO.getId()).orElse(null);
                 assert articleDTOtobeUpdated != null;
-                byte[] byteSVG = stringDBService.generateInteractionGraphSVG(articleDTOtobeUpdated.getEntities());
+                byte[] byteSVG = stringDBService.generateInteractionGraphSVG(articleDTOtobeUpdated.getNamedEntities());
                 articleDTOtobeUpdated.setInteractionsImage(byteSVG);
                 articleDTOtobeUpdated.setInteractionsImageContentType("image/svg+xml");
                 articleService.update(articleDTOtobeUpdated);
@@ -231,21 +233,12 @@ public class ArticleResource {
      * {@code GET  /articles} : get all the articles.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of articles in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<ArticleDTO>> getAllArticles(
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(required = false, defaultValue = "true") boolean eagerload
-    ) {
+    public ResponseEntity<List<ArticleDTO>> getAllArticles(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Articles");
-        Page<ArticleDTO> page;
-        if (eagerload) {
-            page = articleService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = articleService.findAll(pageable);
-        }
+        Page<ArticleDTO> page = articleService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

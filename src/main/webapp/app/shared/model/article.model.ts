@@ -9,8 +9,8 @@ export interface IArticle {
   file?: string | null;
   interactionsImageContentType?: string | null;
   interactionsImage?: string | null;
-  entities?: INamedEntity[] | null;
-  model?: INLPModel | null;
+  namedEntities?: INamedEntity[] | null;
+  nlpModel?: INLPModel | null;
 }
 
 export const defaultValue: Readonly<IArticle> = {};

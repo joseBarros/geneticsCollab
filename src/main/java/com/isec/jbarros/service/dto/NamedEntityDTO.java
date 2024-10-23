@@ -2,9 +2,7 @@ package com.isec.jbarros.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A DTO for the {@link com.isec.jbarros.domain.NamedEntity} entity.
@@ -17,11 +15,13 @@ public class NamedEntityDTO implements Serializable {
     @NotNull
     private String text;
 
-    private String startChar;
+    private Integer startChar;
 
-    private String endChar;
+    private Integer endChar;
 
-    private Set<TagDTO> tags = new HashSet<>();
+    private ArticleDTO article;
+
+    private TagDTO tag;
 
     public String getId() {
         return id;
@@ -39,28 +39,36 @@ public class NamedEntityDTO implements Serializable {
         this.text = text;
     }
 
-    public String getStartChar() {
+    public Integer getStartChar() {
         return startChar;
     }
 
-    public void setStartChar(String startChar) {
+    public void setStartChar(Integer startChar) {
         this.startChar = startChar;
     }
 
-    public String getEndChar() {
+    public Integer getEndChar() {
         return endChar;
     }
 
-    public void setEndChar(String endChar) {
+    public void setEndChar(Integer endChar) {
         this.endChar = endChar;
     }
 
-    public Set<TagDTO> getTags() {
-        return tags;
+    public ArticleDTO getArticle() {
+        return article;
     }
 
-    public void setTags(Set<TagDTO> tags) {
-        this.tags = tags;
+    public void setArticle(ArticleDTO article) {
+        this.article = article;
+    }
+
+    public TagDTO getTag() {
+        return tag;
+    }
+
+    public void setTag(TagDTO tag) {
+        this.tag = tag;
     }
 
     @Override
@@ -90,9 +98,10 @@ public class NamedEntityDTO implements Serializable {
         return "NamedEntityDTO{" +
             "id='" + getId() + "'" +
             ", text='" + getText() + "'" +
-            ", startChar='" + getStartChar() + "'" +
-            ", endChar='" + getEndChar() + "'" +
-            ", tags=" + getTags() +
+            ", startChar=" + getStartChar() +
+            ", endChar=" + getEndChar() +
+            ", article=" + getArticle() +
+            ", tag=" + getTag() +
             "}";
     }
 }

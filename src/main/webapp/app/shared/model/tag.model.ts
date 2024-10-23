@@ -5,7 +5,7 @@ export interface ITag {
   id?: string;
   label?: string;
   namedEntities?: INamedEntity[] | null;
-  nLPModels?: INLPModel[] | null;
+  nlpModel?: INLPModel | null;
 }
 
 export const defaultValue: Readonly<ITag> = {};

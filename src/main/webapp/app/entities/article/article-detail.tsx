@@ -30,21 +30,23 @@ export const ArticleDetail = () => {
   console.log(articleEntity)
   // When the article data is loaded, set the initial filtered tags
   useEffect(() => {
-    if (articleEntity.model && articleEntity.model.tags) {
-      setFilteredTags(articleEntity.model.tags); // Initially, show all tags
+    if (articleEntity.nlpModel && articleEntity.nlpModel.tags) {
+      setFilteredTags(articleEntity.nlpModel.tags); // Initially, show all tags
     }
   }, [articleEntity]);
 
   // Remove a tag from the UI (without deleting it from the DB)
   const handleTagRemove = (tagId: string) => {
+    // Remove the tag from filteredTags (for UI purposes only)
     const remainingTags = filteredTags.filter(tag => tag.id !== tagId);
     setFilteredTags(remainingTags);
   };
 
-  // Filter entities based on the remaining tags
-  const filteredEntities = articleEntity.entities
-    ? articleEntity.entities.filter(entity =>
-      entity.tags?.some(tag => filteredTags.map(t => t.id).includes(tag.id))
+
+// Filter entities based on the remaining tags
+  const filteredEntities = articleEntity.namedEntities
+    ? articleEntity.namedEntities.filter(entity =>
+      filteredTags.some(filteredTag => filteredTag.id === entity.tag?.id)
     )
     : [];
 
@@ -68,10 +70,10 @@ export const ArticleDetail = () => {
           </dt>
           <dd>{articleEntity.title}</dd>
           <dt>
-            <Translate contentKey="geneticsCollabApp.article.model">Model</Translate>
+            <Translate contentKey="geneticsCollabApp.article.nlpModel">Model</Translate>
           </dt>
-          <dd>{articleEntity.model ? articleEntity.model.name : ''}</dd>
-          {articleEntity.model && filteredTags.length > 0 && (
+          <dd>{articleEntity.nlpModel ? articleEntity.nlpModel.name : <span>No NLP model selected</span>}</dd>
+          {articleEntity.nlpModel && filteredTags.length > 0 && (
             <dd>
               {filteredTags.map(tag => (
                 <span key={tag.id} className="badge badge-info" style={{ marginRight: '5px' }}>
@@ -99,19 +101,20 @@ export const ArticleDetail = () => {
                   </Button>
                 ) : null}
               </div>
-            ) : null}
+            ) : <span>No file available</span>}
           </dd>
           <dt>
             <span id="text">
               <Translate contentKey="geneticsCollabApp.article.text">Text</Translate>
             </span>
           </dt>
-          <HighlightEntity text={articleEntity.text || ''} entities={filteredEntities || []} />
+
+          <dd>{articleEntity.text ? <HighlightEntity text={articleEntity.text || ''} entities={filteredEntities || []} /> : <span>No text avaliable</span>}</dd>
           <dt>
-            <Translate contentKey="geneticsCollabApp.article.entities">Entities</Translate>
+            <Translate contentKey="geneticsCollabApp.article.namedEntities">Entities</Translate>
           </dt>
           <dd>
-            {articleEntity.entities && articleEntity.entities.length > 0 ? (
+            {filteredEntities && filteredEntities.length > 0 ? (
               <Table striped>
                 <thead>
                 <tr>
@@ -130,18 +133,16 @@ export const ArticleDetail = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {articleEntity.entities.map((entity, index) => (
+                {filteredEntities.map((entity, index) => (
                   <tr key={entity.id}>
                     <td>{entity.text}</td>
                     <td>
-                      {entity.tags && entity.tags.length > 0 ? (
-                        entity.tags.map(tag => (
-                          <Link key={tag.id} to={`/tag/${tag.id}`}>
-                              <span className="badge badge-info">
-                                {tag.label}
-                              </span>
-                          </Link>
-                        ))
+                      {entity.tag ? (
+                        <Link key={entity.tag.id} to={`/tag/${entity.tag.id}`}>
+                          <span className="badge badge-info">
+                            {entity.tag.label}
+                          </span>
+                        </Link>
                       ) : (
                         <span>No Tags</span>
                       )}
@@ -156,9 +157,9 @@ export const ArticleDetail = () => {
               <span>No entities available</span>
             )}
           </dd>
-          <dt>
-            <Translate contentKey="geneticsCollabApp.article.entities">Entities</Translate>
-          </dt>
+          {/*<dt>*/}
+          {/*  <Translate contentKey="geneticsCollabApp.article.namedEntities">Named Entities</Translate>*/}
+          {/*</dt>*/}
           <dd>
             {filteredEntities.map((entity, i) => (
               <span key={entity.id}>
@@ -169,7 +170,8 @@ export const ArticleDetail = () => {
           </dd>
           <dt>
             <span id="interactionsImage">
-              {articleEntity.interactionsImage ? <Translate contentKey="geneticsCollabApp.article.interactionsImage">Interactions Image</Translate> : ''}
+              {articleEntity.interactionsImage ?
+                <Translate contentKey="geneticsCollabApp.article.interactionsImage">Interactions Image</Translate> : ''}
             </span>
           </dt>
           <dd>
@@ -182,7 +184,7 @@ export const ArticleDetail = () => {
                       //style={{ maxHeight: '30px' }}
                     />
                   </a>
-                ) : null}
+                ) : <span>No Interactions image available</span>}
                 {/*                <span>
                   {articleEntity.interactionsImageContentType}, {byteSize(articleEntity.interactionsImage)}
                 </span>*/}
@@ -191,7 +193,7 @@ export const ArticleDetail = () => {
           </dd>
         </dl>
         <Button tag={Link} to="/article" replace color="info" data-cy="entityDetailsBackButton">
-          <FontAwesomeIcon icon="arrow-left" />{' '}
+        <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
           </span>

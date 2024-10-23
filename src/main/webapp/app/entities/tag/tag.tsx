@@ -117,9 +117,8 @@ export const Tag = () => {
                   <Translate contentKey="geneticsCollabApp.tag.label">Label</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('label')} />
                 </th>
-                <th className="hand" onClick={sort('color')}>
-                  <Translate contentKey="geneticsCollabApp.tag.color">Color</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('color')} />
+                <th>
+                  <Translate contentKey="geneticsCollabApp.tag.nlpModel">Nlp Model</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -133,7 +132,7 @@ export const Tag = () => {
                     </Button>
                   </td>
                   <td>{tag.label}</td>
-                  <td>{tag.color}</td>
+                  <td>{tag.nlpModel ? <Link to={`/nlp-model/${tag.nlpModel.id}`}>{tag.nlpModel.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/tag/${tag.id}`} color="info" size="sm" data-cy="entityDetailsButton">
