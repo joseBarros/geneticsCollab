@@ -21,7 +21,7 @@
       "id": "ID",
       "title": "Title",
       "text": "Text",
-      "file": "File",
+      "file": "Ficheiro",
       "interactionsImage": "Interactions Image",
       "namedEntities": "Named Entities",
       "nlpModel": "Nlp Model"

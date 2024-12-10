@@ -2,29 +2,30 @@
   "geneticsCollabApp": {
     "nLPModel": {
       "home": {
-        "title": "NLP Models",
+        "title": "Modelos NLP",
         "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo(a) NLP Model",
         "createOrEditLabel": "Criar ou editar NLP Model",
-        "editLabel": "Editar NLP Model",
-        "notFound": "Nenhum NLP Models encontrado"
+        "editLabel": "Editar Modelo NLP",
+        "notFound": "Nenhum Modelo NLP encontrado"
       },
       "created": "Um novo NLP Model foi criado com o identificador {{ param }}",
-      "updated": "NLP Model com identificador {{ param }} foi actualizado",
-      "deleted": "NLP Model com identificador {{ param }} foi eliminado",
+      "updated": "Modelo NLP com identificador {{ param }} foi actualizado",
+      "deleted": "Model NLP com identificador {{ param }} foi eliminado",
       "delete": {
         "question": "Tem a certeza que pretende eliminar o(a) NLP Model {{ id }}?"
       },
       "detail": {
-        "title": "NLP Model"
+        "title": "Modelo NLP"
       },
       "id": "ID",
-      "name": "Name",
+      "name": "Nome",
       "framework": "Framework",
-      "path": "Path",
-      "notes": "Notes",
+      "path": "Caminho",
+      "notes": "Notas",
       "tags": "Tags",
-      "articles": "Articles"
+      "articles": "Artigos",
+      "file": "Ficheiro"
     }
   }
 }

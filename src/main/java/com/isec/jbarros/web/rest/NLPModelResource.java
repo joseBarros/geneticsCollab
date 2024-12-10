@@ -1,16 +1,29 @@
 package com.isec.jbarros.web.rest;
 
 import com.isec.jbarros.repository.NLPModelRepository;
+import com.isec.jbarros.security.SecurityUtils;
 import com.isec.jbarros.service.NLPModelService;
+import com.isec.jbarros.service.UserService;
 import com.isec.jbarros.service.dto.NLPModelDTO;
 import com.isec.jbarros.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -38,11 +52,17 @@ public class NLPModelResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final String dirSeparator = FileSystems.getDefault().getSeparator();
+    private final String uploadDir = Paths.get("").toAbsolutePath() + dirSeparator + "uploads";
+
+    private final UserService userService;
+
     private final NLPModelService nLPModelService;
 
     private final NLPModelRepository nLPModelRepository;
 
-    public NLPModelResource(NLPModelService nLPModelService, NLPModelRepository nLPModelRepository) {
+    public NLPModelResource(UserService userService, NLPModelService nLPModelService, NLPModelRepository nLPModelRepository) {
+        this.userService = userService;
         this.nLPModelService = nLPModelService;
         this.nLPModelRepository = nLPModelRepository;
     }
@@ -55,11 +75,12 @@ public class NLPModelResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<NLPModelDTO> createNLPModel(@Valid @RequestBody NLPModelDTO nLPModelDTO) throws URISyntaxException {
+    public ResponseEntity<NLPModelDTO> createNLPModel(@RequestPart("nLPModelDTO") NLPModelDTO nLPModelDTO, @RequestParam("file") MultipartFile file) throws URISyntaxException {
         log.debug("REST request to save NLPModel : {}", nLPModelDTO);
         if (nLPModelDTO.getId() != null) {
             throw new BadRequestAlertException("A new nLPModel cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        nLPModelDTO = uploadNLPModelFile(nLPModelDTO, file);
         NLPModelDTO result = nLPModelService.save(nLPModelDTO);
         return ResponseEntity
             .created(new URI("/api/nlp-models/" + result.getId()))
@@ -80,7 +101,7 @@ public class NLPModelResource {
     @PutMapping("/{id}")
     public ResponseEntity<NLPModelDTO> updateNLPModel(
         @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody NLPModelDTO nLPModelDTO
+        @RequestPart("nLPModelDTO") NLPModelDTO nLPModelDTO, @RequestParam("file") MultipartFile file
     ) throws URISyntaxException {
         log.debug("REST request to update NLPModel : {}, {}", id, nLPModelDTO);
         if (nLPModelDTO.getId() == null) {
@@ -93,7 +114,7 @@ public class NLPModelResource {
         if (!nLPModelRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-
+        nLPModelDTO = uploadNLPModelFile(nLPModelDTO, file);
         NLPModelDTO result = nLPModelService.update(nLPModelDTO);
         return ResponseEntity
             .ok()
@@ -176,4 +197,78 @@ public class NLPModelResource {
         nLPModelService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
     }
+
+    public NLPModelDTO uploadNLPModelFile(NLPModelDTO nLPModelDTO, MultipartFile file) {
+        log.debug("REST request to upload file : {}", file.getOriginalFilename());
+
+        if (file.isEmpty()) {
+            throw new BadRequestAlertException("File is empty", ENTITY_NAME, "empty");
+        }
+
+        try {
+            String userUploadDir = uploadDir + dirSeparator + userService.getUserWithAuthorities().orElseThrow().getId();
+            log.debug("userUploadDir : {}", userUploadDir);
+            // Create directory if it does not exist
+            Path uploadPath = Paths.get(userUploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            String originalFilesDir = userUploadDir + dirSeparator + "original";
+            Path originalUploadPath = Paths.get(originalFilesDir);
+            if (!Files.exists(originalUploadPath)) {
+                Files.createDirectories(originalUploadPath);
+            }
+            log.debug("originalFilesDir : {}", originalFilesDir);
+            // Save the file
+            String filePath = originalFilesDir + File.separator + file.getOriginalFilename();
+            Path path = Paths.get(filePath);
+            Files.write(path, file.getBytes());
+            String extractDir = userUploadDir + dirSeparator + "extracted" + dirSeparator + Objects.requireNonNull(file.getOriginalFilename()).substring(0, file.getOriginalFilename().lastIndexOf('.'));
+            // Extract ZIP file contents
+            extractZipFile(filePath, extractDir);
+
+            // Update the NLPModel with the file path
+            nLPModelDTO.setPath(extractDir);
+
+            log.debug("File uploaded successfully: " + filePath);
+        } catch (IOException e) {
+            log.error("Failed to upload file", e);
+            throw new BadRequestAlertException("File upload failed: " + e.getMessage(), ENTITY_NAME, e.getMessage());
+        }
+        return nLPModelDTO;
+    }
+
+    private void extractZipFile(String zipFilePath, String destDir) throws IOException {
+        try (ZipInputStream zipIn = new ZipInputStream(Files.newInputStream(Paths.get(zipFilePath)))) {
+            ZipEntry entry = zipIn.getNextEntry();
+            while (entry != null) {
+                Path entryPath = Paths.get(destDir, entry.getName()).normalize();
+
+                // Check for directory traversal vulnerability
+                if (!entryPath.startsWith(Paths.get(destDir))) {
+                    throw new IOException("Entry is outside of the target dir: " + entry.getName());
+                }
+
+                if (entry.isDirectory()) {
+                    Files.createDirectories(entryPath);
+                } else {
+                    // Ensure parent directories exist
+                    Files.createDirectories(entryPath.getParent());
+                    System.out.println("Extracting " + entryPath);
+
+                    // Extract the file
+                    try (FileOutputStream fos = new FileOutputStream(entryPath.toFile())) {
+                        byte[] buffer = new byte[4096];
+                        int len;
+                        while ((len = zipIn.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                    }
+                }
+                zipIn.closeEntry();
+                entry = zipIn.getNextEntry();
+            }
+        }
+    }
+
 }

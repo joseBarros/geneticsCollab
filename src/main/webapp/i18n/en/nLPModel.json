@@ -24,7 +24,8 @@
       "path": "Path",
       "notes": "Notes",
       "tags": "Tags",
-      "articles": "Articles"
+      "articles": "Articles",
+      "file": "File"
     }
   }
 }

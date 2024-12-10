@@ -52,11 +52,11 @@ export const NamedEntityDetail = () => {
           <dt>
             <Translate contentKey="geneticsCollabApp.namedEntity.article">Article</Translate>
           </dt>
-          <dd>{namedEntityEntity.article ? namedEntityEntity.article.id : ''}</dd>
+          <dd>{namedEntityEntity.article ? namedEntityEntity.article.title : ''}</dd>
           <dt>
             <Translate contentKey="geneticsCollabApp.namedEntity.tag">Tag</Translate>
           </dt>
-          <dd>{namedEntityEntity.tag ? namedEntityEntity.tag.id : ''}</dd>
+          <dd>{namedEntityEntity.tag ? namedEntityEntity.tag.label : ''}</dd>
         </dl>
         <Button tag={Link} to="/named-entity" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

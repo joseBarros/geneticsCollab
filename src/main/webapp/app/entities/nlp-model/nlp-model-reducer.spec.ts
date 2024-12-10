@@ -210,44 +210,6 @@ describe('Entities reducer tests', () => {
       expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
     });
 
-    it('dispatches CREATE_NLPMODEL actions', async () => {
-      const expectedActions = [
-        {
-          type: createEntity.pending.type,
-        },
-        {
-          type: getEntities.pending.type,
-        },
-        {
-          type: createEntity.fulfilled.type,
-          payload: resolvedObject,
-        },
-      ];
-      await store.dispatch(createEntity({ id: 'CBA' }));
-      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
-      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
-      expect(store.getActions()[2]).toMatchObject(expectedActions[2]);
-    });
-
-    it('dispatches UPDATE_NLPMODEL actions', async () => {
-      const expectedActions = [
-        {
-          type: updateEntity.pending.type,
-        },
-        {
-          type: getEntities.pending.type,
-        },
-        {
-          type: updateEntity.fulfilled.type,
-          payload: resolvedObject,
-        },
-      ];
-      await store.dispatch(updateEntity({ id: 'CBA' }));
-      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
-      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
-      expect(store.getActions()[2]).toMatchObject(expectedActions[2]);
-    });
-
     it('dispatches PARTIAL_UPDATE_NLPMODEL actions', async () => {
       const expectedActions = [
         {

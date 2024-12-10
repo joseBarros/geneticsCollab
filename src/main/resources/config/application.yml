@@ -130,7 +130,13 @@ spring:
     ansi:
       console-available: true
 
+  servlet:
+    multipart:
+      max-file-size: 700MB
+      max-request-size: 700MB
 server:
+  tomcat:
+    connection-timeout: 1200000
   servlet:
     session:
       cookie:

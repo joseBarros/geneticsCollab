@@ -34,8 +34,32 @@ export const getEntity = createAsyncThunk(
 
 export const createEntity = createAsyncThunk(
   'nLPModel/create_entity',
-  async (entity: INLPModel, thunkAPI) => {
-    const result = await axios.post<INLPModel>(apiUrl, cleanEntity(entity));
+  async ({ entity, file }: { entity: INLPModel; file: File }, thunkAPI) => {
+
+    // eslint-disable-next-line no-console
+    console.log("nLPModel/create_entity")
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('nLPModelDTO', new Blob([JSON.stringify(cleanEntity(entity))], { type: 'application/json' }));
+
+    // eslint-disable-next-line no-console
+    console.log(formData)
+
+    // eslint-disable-next-line no-console
+    console.log(file)
+    // eslint-disable-next-line no-console
+    console.log(cleanEntity(entity))
+
+    const result = await axios.post<INLPModel>(apiUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 300000, // 5 minutes
+    });
+    // eslint-disable-next-line no-console
+    console.log(result)
+
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -43,14 +67,25 @@ export const createEntity = createAsyncThunk(
 );
 
 export const updateEntity = createAsyncThunk(
-  'nLPModel/update_entity',
-  async (entity: INLPModel, thunkAPI) => {
-    const result = await axios.put<INLPModel>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
-    return result;
-  },
-  { serializeError: serializeAxiosError },
-);
+    'nLPModel/update_entity',
+    async ({ entity, file }: { entity: INLPModel; file: File }, thunkAPI) => {
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('nLPModelDTO', new Blob([JSON.stringify(cleanEntity(entity))], { type: 'application/json' }));
+
+      const result = await axios.put<INLPModel>(`${apiUrl}/${entity.id}` , formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 300000, // 5 minutes
+      });
+
+      thunkAPI.dispatch(getEntities({}));
+      return result;
+    },
+    { serializeError: serializeAxiosError },
+  );
 
 export const partialUpdateEntity = createAsyncThunk(
   'nLPModel/partial_update_entity',

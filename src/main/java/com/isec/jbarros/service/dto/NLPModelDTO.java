@@ -23,6 +23,16 @@ public class NLPModelDTO implements Serializable {
 
     private String notes;
 
+    private byte[] file;
+
+    public byte[] getFile() {
+        return file;
+    }
+
+    public void setFile(byte[] file) {
+        this.file = file;
+    }
+
     private Set<TagDTO> tags = new HashSet<>();
 
     public String getId() {

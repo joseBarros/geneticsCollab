@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, FormText } from 'reactstrap';
-import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { isNumber, Translate, translate, ValidatedBlobField, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
@@ -24,6 +25,17 @@ export const NLPModelUpdate = () => {
   const updating = useAppSelector(state => state.nLPModel.updating);
   const updateSuccess = useAppSelector(state => state.nLPModel.updateSuccess);
 
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = event => {
+    setFile(event.target.files[0]); // Store the selected file in the state
+  };
+
+  // Configure Axios with increased timeout
+  const axiosInstance = axios.create({
+    timeout: 120000, // Set the timeout to 120 seconds (2 minutes) or longer
+  });
+
   const handleClose = () => {
     navigate('/nlp-model' + location.search);
   };
@@ -42,17 +54,17 @@ export const NLPModelUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // eslint-disable-next-line complexity
-  const saveEntity = values => {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const saveEntity = async values => {
     const entity = {
       ...nLPModelEntity,
       ...values,
     };
 
     if (isNew) {
-      dispatch(createEntity(entity));
+      dispatch(createEntity({ entity, file }));
     } else {
-      dispatch(updateEntity(entity));
+      dispatch(updateEntity({ entity, file }));
     }
   };
 
@@ -107,12 +119,23 @@ export const NLPModelUpdate = () => {
                 data-cy="framework"
                 type="text"
               />
+              <ValidatedBlobField
+                label={translate('geneticsCollabApp.nLPModel.file')}
+                id="nlp-model-file"
+                name="file"
+                data-cy="file"
+                openActionLabel={translate('entity.action.open')}
+                isImage={false}
+                accept=".zip,.tar,.tar.gz,.rar"
+                onChange={handleFileChange}
+              />
               <ValidatedField
                 label={translate('geneticsCollabApp.nLPModel.path')}
                 id="nlp-model-path"
                 name="path"
                 data-cy="path"
                 type="text"
+                readOnly
               />
               <ValidatedField
                 label={translate('geneticsCollabApp.nLPModel.notes')}

@@ -1,7 +1,7 @@
 {
   "home": {
-    "title": "Welcome, to geneticsCollab",
-    "subtitle": "This website is where machine learning becomes social",
+    "title": "Welcome, to GeneticsCollab",
+    "subtitle": "A collaborative platform for biomedical researchers",
     "logged": {
       "message": "You are logged in as user \"{{username}}\"."
     },

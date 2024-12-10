@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -38,7 +39,7 @@ public class StringDBService {
 
         // Join entity names for StringDB API request
         String joinedEntities = String.join("%0D", entityNames);
-        String encodedEntities = URLEncoder.encode(joinedEntities, "UTF-8");
+        String encodedEntities = URLEncoder.encode(joinedEntities, StandardCharsets.UTF_8);
 
         // Build the StringDB API URL
         //String apiUrl = STRING_DB_API_URL + "/" + OUTPUT_FORMAT + "/" + METHOD + "?identifiers=" + encodedEntities + "&species=9606";
@@ -58,7 +59,7 @@ public class StringDBService {
 
         // Save the adjusted SVG content as a local file
         File svgFile = new File("interaction_graph.svg");
-        try (FileWriter writer = new FileWriter(svgFile)) {
+        try (FileWriter writer = new FileWriter(svgFile, StandardCharsets.UTF_8)) {
             writer.write(adjustedSvgContent);
         }
 
@@ -109,7 +110,7 @@ public class StringDBService {
      */
     private String adjustSvgAttributes(String svgContent, Pattern pattern, int offset) {
         Matcher matcher = pattern.matcher(svgContent);
-        StringBuffer adjustedContent = new StringBuffer();
+        StringBuilder adjustedContent = new StringBuilder();
 
         while (matcher.find()) {
             // Get the current value of the attribute (e.g., cx="100")
