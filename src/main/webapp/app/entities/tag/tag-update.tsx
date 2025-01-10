@@ -38,7 +38,7 @@ export const TagUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getNLpModels({}));
+    //dispatch(getNLpModels({}));
   }, []);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export const TagUpdate = () => {
     const entity = {
       ...tagEntity,
       ...values,
-      nlpModel: nLPModels.find(it => it.id.toString() === values.nlpModel.toString()),
+      //nlpModel: nLPModels.find(it => it.id.toString() === values.nlpModel.toString()),
     };
 
     if (isNew) {
@@ -67,7 +67,7 @@ export const TagUpdate = () => {
       ? {}
       : {
           ...tagEntity,
-          nlpModel: tagEntity?.nlpModel?.id,
+          //nlpModel: tagEntity?.nlpModel?.id,
         };
 
   return (

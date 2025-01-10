@@ -1,6 +1,8 @@
 package com.isec.jbarros.repository;
 
 import com.isec.jbarros.domain.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TagRepository extends MongoRepository<Tag, String> {}
+public interface TagRepository extends MongoRepository<Tag, String> {
+    Page<Tag> findByUserId(String userId, Pageable pageable);
+}

@@ -3,6 +3,7 @@ package com.isec.jbarros.service.impl;
 import com.isec.jbarros.domain.Tag;
 import com.isec.jbarros.repository.TagRepository;
 import com.isec.jbarros.service.TagService;
+import com.isec.jbarros.service.UserService;
 import com.isec.jbarros.service.dto.TagDTO;
 import com.isec.jbarros.service.mapper.TagMapper;
 import java.util.Optional;
@@ -24,15 +25,19 @@ public class TagServiceImpl implements TagService {
 
     private final TagMapper tagMapper;
 
-    public TagServiceImpl(TagRepository tagRepository, TagMapper tagMapper) {
+    private final UserService userService;
+
+    public TagServiceImpl(TagRepository tagRepository, TagMapper tagMapper, UserService userService) {
         this.tagRepository = tagRepository;
         this.tagMapper = tagMapper;
+        this.userService = userService;
     }
 
     @Override
     public TagDTO save(TagDTO tagDTO) {
         log.debug("Request to save Tag : {}", tagDTO);
         Tag tag = tagMapper.toEntity(tagDTO);
+        //tag.setUser(userService.getUserWithAuthorities().orElseThrow());
         tag = tagRepository.save(tag);
         return tagMapper.toDto(tag);
     }
@@ -41,6 +46,7 @@ public class TagServiceImpl implements TagService {
     public TagDTO update(TagDTO tagDTO) {
         log.debug("Request to update Tag : {}", tagDTO);
         Tag tag = tagMapper.toEntity(tagDTO);
+        //tag.setUser(userService.getUserWithAuthorities().orElseThrow());
         tag = tagRepository.save(tag);
         return tagMapper.toDto(tag);
     }
@@ -63,7 +69,14 @@ public class TagServiceImpl implements TagService {
     @Override
     public Page<TagDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Tags");
-        return tagRepository.findAll(pageable).map(tagMapper::toDto);
+
+        //String userId = userService.getUserWithAuthorities().orElseThrow().getId();
+        //get all models from all users in case is admin
+        //if(userService.getUserWithAuthorities().orElseThrow().getAuthorities().stream().filter(authority -> authority.getName().equals("ROLE_ADMIN")).findFirst().orElse(null) != null){
+            return tagRepository.findAll(pageable).map(tagMapper::toDto);
+        //}
+        //for normal users, gets user own tags
+        //return tagRepository.findByUserId(userId, pageable).map(tagMapper::toDto);
     }
 
     @Override

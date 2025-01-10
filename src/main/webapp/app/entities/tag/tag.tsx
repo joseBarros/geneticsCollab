@@ -20,6 +20,8 @@ export const Tag = () => {
     overridePaginationStateWithQueryParams(getPaginationState(pageLocation, ITEMS_PER_PAGE, 'id'), pageLocation.search),
   );
 
+  const [usedTagIds, setUsedTagIds] = useState(new Set());
+
   const tagList = useAppSelector(state => state.tag.entities);
   const loading = useAppSelector(state => state.tag.loading);
   const totalItems = useAppSelector(state => state.tag.totalItems);
@@ -60,6 +62,17 @@ export const Tag = () => {
       });
     }
   }, [pageLocation.search]);
+
+  useEffect(() => {
+    const fetchUsedTags = async () => {
+      // Replace this with your API endpoint to get tag usage info
+      const response = await fetch('/api/articles/used-tags');
+      const data = await response.json();
+      setUsedTagIds(new Set(data)); // Assuming data is an array of tag IDs
+    };
+
+    fetchUsedTags();
+  }, []);
 
   const sort = p => () => {
     setPaginationState({
@@ -160,6 +173,7 @@ export const Tag = () => {
                         color="danger"
                         size="sm"
                         data-cy="entityDeleteButton"
+                        disabled={usedTagIds.has(tag.id)}
                       >
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">

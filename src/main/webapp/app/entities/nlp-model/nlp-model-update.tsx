@@ -126,8 +126,9 @@ export const NLPModelUpdate = () => {
                 data-cy="file"
                 openActionLabel={translate('entity.action.open')}
                 isImage={false}
-                accept=".zip,.tar,.tar.gz,.rar"
+                accept=".zip,.tar,.tar.gz,.rar,.7z"
                 onChange={handleFileChange}
+                required={!nLPModelEntity.path}
               />
               <ValidatedField
                 label={translate('geneticsCollabApp.nLPModel.path')}

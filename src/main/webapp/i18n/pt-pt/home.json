@@ -1,7 +1,7 @@
 {
   "home": {
-    "title": "Bem-vindo, Java Hipster!",
-    "subtitle": "Esta é a página principal",
+    "title": "Bem-vindo ao GeneticsCollab",
+    "subtitle": "Uma plataforma colaborativa para investigadores da area da biomédica",
     "logged": {
       "message": "Está autenticado como \"{{username}}\"."
     },

@@ -71,7 +71,8 @@ export const updateEntity = createAsyncThunk(
     async ({ entity, file }: { entity: INLPModel; file: File }, thunkAPI) => {
 
       const formData = new FormData();
-      formData.append('file', file);
+      // Append the file or an empty Blob if no file is provided
+      formData.append('file', file || new Blob([], { type: 'application/octet-stream' }));
       formData.append('nLPModelDTO', new Blob([JSON.stringify(cleanEntity(entity))], { type: 'application/json' }));
 
       const result = await axios.put<INLPModel>(`${apiUrl}/${entity.id}` , formData, {

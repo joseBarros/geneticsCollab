@@ -114,7 +114,9 @@ public class NLPModelResource {
         if (!nLPModelRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-        nLPModelDTO = uploadNLPModelFile(nLPModelDTO, file);
+        if(!file.isEmpty()){
+            nLPModelDTO = uploadNLPModelFile(nLPModelDTO, file);
+        }
         NLPModelDTO result = nLPModelService.update(nLPModelDTO);
         return ResponseEntity
             .ok()

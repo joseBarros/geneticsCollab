@@ -59,14 +59,16 @@ export const NLPModelDetail = () => {
             <Translate contentKey="geneticsCollabApp.nLPModel.tags">Tags</Translate>
           </dt>
           <dd>
-            {nLPModelEntity.tags
-              ? nLPModelEntity.tags.map((val, i) => (
+            {nLPModelEntity.tags && nLPModelEntity.tags.length > 0 ? (
+                nLPModelEntity.tags.filter(tag => tag !== null && tag !== undefined).map((val, i) => (
                   <span key={val.id}>
                     <a>{val.label}</a>
                     {nLPModelEntity.tags && i === nLPModelEntity.tags.length - 1 ? '' : ', '}
                   </span>
                 ))
-              : null}
+            ) : (
+              <span>No tags available</span>
+            )}
           </dd>
         </dl>
         <Button tag={Link} to="/nlp-model" replace color="info" data-cy="entityDetailsBackButton">

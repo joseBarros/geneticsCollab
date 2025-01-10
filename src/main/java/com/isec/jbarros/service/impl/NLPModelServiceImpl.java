@@ -3,31 +3,18 @@ package com.isec.jbarros.service.impl;
 import com.isec.jbarros.domain.NLPModel;
 import com.isec.jbarros.repository.NLPModelRepository;
 import com.isec.jbarros.service.NLPModelService;
+import com.isec.jbarros.service.UserService;
 import com.isec.jbarros.service.dto.NLPModelDTO;
 import com.isec.jbarros.service.mapper.NLPModelMapper;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
-import java.util.concurrent.Future;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import com.isec.jbarros.web.rest.NLPModelResource;
-import com.isec.jbarros.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link com.isec.jbarros.domain.NLPModel}.
@@ -48,15 +35,21 @@ public class NLPModelServiceImpl implements NLPModelService {
 
     private final String extratedDir = uploadDir + dirSeparator + "extracted";
 
-    public NLPModelServiceImpl(NLPModelRepository nLPModelRepository, NLPModelMapper nLPModelMapper) {
+    private final UserService userService;
+
+    private final String adminId = "user-1";
+
+    public NLPModelServiceImpl(NLPModelRepository nLPModelRepository, NLPModelMapper nLPModelMapper, UserService userService) {
         this.nLPModelRepository = nLPModelRepository;
         this.nLPModelMapper = nLPModelMapper;
+        this.userService = userService;
     }
 
     @Override
     public NLPModelDTO save(NLPModelDTO nLPModelDTO) {
         log.debug("Request to save NLPModel : {}", nLPModelDTO);
         NLPModel nLPModel = nLPModelMapper.toEntity(nLPModelDTO);
+        nLPModel.setUser(userService.getUserWithAuthorities().orElseThrow());
         nLPModel = nLPModelRepository.save(nLPModel);
         return nLPModelMapper.toDto(nLPModel);
     }
@@ -65,6 +58,7 @@ public class NLPModelServiceImpl implements NLPModelService {
     public NLPModelDTO update(NLPModelDTO nLPModelDTO) {
         log.debug("Request to update NLPModel : {}", nLPModelDTO);
         NLPModel nLPModel = nLPModelMapper.toEntity(nLPModelDTO);
+        nLPModel.setUser(userService.getUserWithAuthorities().orElseThrow());
         nLPModel = nLPModelRepository.save(nLPModel);
         return nLPModelMapper.toDto(nLPModel);
     }
@@ -87,7 +81,14 @@ public class NLPModelServiceImpl implements NLPModelService {
     @Override
     public Page<NLPModelDTO> findAll(Pageable pageable) {
         log.debug("Request to get all NLPModels");
-        return nLPModelRepository.findAll(pageable).map(nLPModelMapper::toDto);
+
+        String userId = userService.getUserWithAuthorities().orElseThrow().getId();
+        //get all models from all users in case is admin
+        if(userService.getUserWithAuthorities().orElseThrow().getAuthorities().stream().filter(authority -> authority.getName().equals("ROLE_ADMIN")).findFirst().orElse(null) != null){
+            return nLPModelRepository.findAll(pageable).map(nLPModelMapper::toDto);
+        }
+        //for normal users, gets user own models plus the admin default ones that are for all users
+        return nLPModelRepository.findByUserIdOrUserId(userId,adminId, pageable).map(nLPModelMapper::toDto);
     }
 
     @Override
@@ -101,87 +102,4 @@ public class NLPModelServiceImpl implements NLPModelService {
         log.debug("Request to delete NLPModel : {}", id);
         nLPModelRepository.deleteById(id);
     }
-
-//    @Override
-//    @Async
-//    public Future<NLPModelDTO> processNLPModelAsync(NLPModelDTO nLPModelDTO, MultipartFile file) {
-//        try {
-//            // Processing logic (e.g., saving the file and updating the DTO)
-//            nLPModelDTO = uploadNLPModelFile(nLPModelDTO, file);
-//            NLPModelDTO result = save(nLPModelDTO); // Replace with actual save method
-//            log.debug("Model processed and saved with ID: {}", result.getId());
-//            return new AsyncResult<>(result);
-//        } catch (Exception e) {
-//            log.error("Error processing NLPModel: ", e);
-//            return new AsyncResult<>(null);
-//        }
-//    }
-//
-//    @Override
-//    public NLPModelDTO uploadNLPModelFile(NLPModelDTO nLPModelDTO, MultipartFile file) {
-//        log.debug("REST request to upload file : {}", file.getOriginalFilename());
-//
-//        if (file.isEmpty()) {
-//            throw new BadRequestAlertException("File is empty", ENTITY_NAME, "empty");
-//        }
-//
-//        try {
-//            // Create directory if it does not exist
-//            Path uploadPath = Paths.get(uploadDir);
-//            if (!Files.exists(uploadPath)) {
-//                Files.createDirectories(uploadPath);
-//            }
-//
-//            // Save the file
-//            String filePath = uploadDir + File.separator + file.getOriginalFilename();
-//            Path path = Paths.get(filePath);
-//            Files.write(path, file.getBytes());
-//            String extractDir = extratedDir + dirSeparator + file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf('.'));
-//            // Extract ZIP file contents
-//            extractZipFile(filePath, extractDir);
-//
-//            // Update the NLPModel with the file path
-//            nLPModelDTO.setPath(extractDir);
-//
-//            log.debug("File uploaded successfully: " + filePath);
-//        } catch (IOException e) {
-//            log.error("Failed to upload file", e);
-//            throw new BadRequestAlertException("File upload failed: " + e.getMessage(), ENTITY_NAME, e.getMessage());
-//        }
-//        return nLPModelDTO;
-//    }
-//
-//    @Override
-//    public void extractZipFile(String zipFilePath, String destDir) throws IOException {
-//        try (ZipInputStream zipIn = new ZipInputStream(Files.newInputStream(Paths.get(zipFilePath)))) {
-//            ZipEntry entry = zipIn.getNextEntry();
-//            while (entry != null) {
-//                Path entryPath = Paths.get(destDir, entry.getName()).normalize();
-//
-//                // Check for directory traversal vulnerability
-//                if (!entryPath.startsWith(Paths.get(destDir))) {
-//                    throw new IOException("Entry is outside of the target dir: " + entry.getName());
-//                }
-//
-//                if (entry.isDirectory()) {
-//                    Files.createDirectories(entryPath);
-//                } else {
-//                    // Ensure parent directories exist
-//                    Files.createDirectories(entryPath.getParent());
-//                    System.out.println("Extracting " + entryPath);
-//
-//                    // Extract the file
-//                    try (FileOutputStream fos = new FileOutputStream(entryPath.toFile())) {
-//                        byte[] buffer = new byte[4096];
-//                        int len;
-//                        while ((len = zipIn.read(buffer)) > 0) {
-//                            fos.write(buffer, 0, len);
-//                        }
-//                    }
-//                }
-//                zipIn.closeEntry();
-//                entry = zipIn.getNextEntry();
-//            }
-//        }
-//    }
 }

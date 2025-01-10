@@ -36,6 +36,11 @@ public class Tag implements Serializable {
     @JsonIgnoreProperties(value = { "tags", "articles" }, allowSetters = true)
     private NLPModel nlpModel;
 
+    @DBRef
+    @Field("user")
+    @JsonIgnoreProperties(value = { "models" }, allowSetters = true)
+    private User user;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public String getId() {
@@ -106,6 +111,14 @@ public class Tag implements Serializable {
     public Tag nlpModel(NLPModel nLPModel) {
         this.setNlpModel(nLPModel);
         return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

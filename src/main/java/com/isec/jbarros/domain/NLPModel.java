@@ -45,6 +45,11 @@ public class NLPModel implements Serializable {
     @JsonIgnoreProperties(value = { "namedEntities", "nlpModel" }, allowSetters = true)
     private Set<Article> articles = new HashSet<>();
 
+    @DBRef
+    @Field("user")
+    @JsonIgnoreProperties(value = { "models" }, allowSetters = true)
+    private User user;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public String getId() {
@@ -172,6 +177,14 @@ public class NLPModel implements Serializable {
         this.articles.remove(article);
         article.setNlpModel(null);
         return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
